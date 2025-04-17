@@ -16,7 +16,7 @@ import HyphenateChat
 //let Appkey = "81446724#514456"
 
 
-let Appkey = "easemob-demo#chatdemoui"
+let Appkey = "easemob#easeim"
 let useSandbox = false
 let useAppId = false
 
@@ -58,8 +58,8 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
     }
     public func initView() {
         self.pwdField.text = "1"
-        self.userIdField.text = "lxm"
-        self.conversationIdField.text = "lxm2"
+        self.userIdField.text = "du001"
+        self.conversationIdField.text = "du002"
         self.textField.text = "hello world"
     }
     func loginWithPwd() {
@@ -150,9 +150,9 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
     
     @IBAction func sendFileAction(_ sender: Any) {
         let msgBody = EMCombineMessageBody(title: "dd", summary: "dads", compatibleText: "asdf", messageIdList: [])
-        EMClient.shared().chatManager?.send(EMChatMessage(conversationID: "lxm2", body: msgBody, ext: nil), progress: nil)
+        EMClient.shared().chatManager?.send(EMChatMessage(conversationID: "du002", body: msgBody, ext: nil), progress: nil)
  //       sendFileMessage()
-//        EMClient.shared().chatManager?.asyncFetchHistoryMessages(fromServer: "lxm", conversationType: .chat, startMessageId: "", pageSize: 100, completion: { result, err in
+//        EMClient.shared().chatManager?.asyncFetchHistoryMessages(fromServer: "du001", conversationType: .chat, startMessageId: "", pageSize: 100, completion: { result, err in
 //            self.printLog("asyncFetchHistoryMessages:\(result?.list?.count ?? 0)")
 //        })
 //        generateData()
@@ -204,7 +204,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
     func generateData() {
         printLog("generateData begin")
         for i in 0...2000 {
-            let conversationId = "lxm\(i)"
+            let conversationId = "du00\(i)"
             if let conversation = EMClient.shared().chatManager?.getConversation(conversationId, type: .chat, createIfNotExist: true) {
                 var messages: [EMChatMessage] = []
                 for j in 0...20 {
@@ -315,7 +315,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
             }
             let pageCount = 20
             for i in startIndex...startIndex+pageCount-1 {
-                let conversationId = "lxm\(i)"
+                let conversationId = "du00\(i)"
                 if let conversation = EMClient.shared().chatManager?.getConversation(conversationId, type: .chat, createIfNotExist: true) {
                     // 先设置所有消息已读
                     var err: EMError? = nil
@@ -335,13 +335,14 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     @IBAction func testAction(_ sender: Any) {
-        for i in 0...10 {
-            mockTask(urlString: "https://downloadsdk.easemob.com/downloads/IMDemo/native.zip",index: i)
-        }
+        test_remove_group_member_api()
+//        for i in 0...10 {
+//            mockTask(urlString: "https://downloadsdk.easemob.com/downloads/IMDemo/native.zip",index: i)
+//        }
         //generateData();
-        testTask()
+//        testTask()
 //        if let conversation = EMClient.shared().chatManager?.getConversationWithConvId(self.groupId) {
-//            conversation.loadMessages(withKeyword: nil, timestamp: -1, count: 20, fromUsers: ["lxm","lxm2"], searchDirection: .up, scope: .all) { msgs, e in
+//            conversation.loadMessages(withKeyword: nil, timestamp: -1, count: 20, fromUsers: ["du001","du002"], searchDirection: .up, scope: .all) { msgs, e in
 //                if let msgs = msgs {
 //                    for msg in msgs {
 //                        self.printLog("messageId:\(msg.messageId),isReadAck:\(msg.isReadAcked),isDeliverAck:\(msg.isDeliverAcked),isRead:\(msg.isRead)")
@@ -351,7 +352,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
 //        }
 //        let option = EMFetchServerMessagesOption()
 //        option.isSave = true
-//        option.fromIds = ["lxm","lxm2"]
+//        option.fromIds = ["du001","du002"]
 //        EMClient.shared().chatManager?.fetchMessagesFromServer(by: self.groupId, conversationType: .groupChat, cursor: "", pageSize: 10, option: option, completion: { result, e in
 //            if let list = result?.list {
 //                for msg in list {
@@ -396,12 +397,12 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
 //        let option = EMFetchServerMessagesOption()
 //        option.isSave = true
 //        EMClient.shared().chatManager?.fetchMessagesFromServer(by: self.conversationIdField.text ?? "", conversationType: .chat, cursor: "", pageSize: 20, option: option) {_,_ in
-//            if let conv = EMClient.shared.chatManager?.getConversation("lxm2", type: .chat, createIfNotExist: true) {
+//            if let conv = EMClient.shared.chatManager?.getConversation("du002", type: .chat, createIfNotExist: true) {
 //                //conv.deleteAllMessages(nil)
 //                self.printLog("conversation:\(conv.conversationId ?? ""),messageCount;\(conv.messagesCount)")
 //            }
 //        }
-//        if let conv = EMClient.shared.chatManager?.getConversation("lxm2", type: .chat, createIfNotExist: true) {
+//        if let conv = EMClient.shared.chatManager?.getConversation("du002", type: .chat, createIfNotExist: true) {
 //            EMClient.shared().chatManager?.removeMessagesFromServer(with: conv, timeStamp: TimeInterval(Int((Date().timeIntervalSince1970 - 30) * 1000)) ) {_ in
 //                self.printLog("conversation:\(conv.conversationId ?? ""),messageCount;\(conv.messagesCount)")
 //            }
@@ -545,6 +546,14 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
             self.logView.scrollRangeToVisible(NSRange(location: self.logView.text.count, length: 1))
         }
     }
+    
+    
+    
+    func test_remove_group_member_api() {
+        // 创建GroupMemberTestAPI实例并调用测试方法
+        let testAPI = test_remove_group_member(viewController: self)
+        testAPI.test_remove_group_member_api()
+    }
 }
 
 extension ViewController: EMLogDelegate {
@@ -584,7 +593,7 @@ extension ViewController {
         
         EMClient.shared().initializeSDK(with: options)
         DispatchQueue.main.async {
-            if let conversation1 = EMClient.shared().chatManager?.getConversation("lxm2", type: .chat, createIfNotExist: true) {
+            if let conversation1 = EMClient.shared().chatManager?.getConversation("du002", type: .chat, createIfNotExist: true) {
                 let _ = conversation1.latestMessage
                 let _ = conversation1.unreadMessagesCount
                 let _ = conversation1.messagesCount
@@ -632,7 +641,7 @@ extension ViewController {
     }
     func addLog() {
         DispatchQueue.global().asyncAfter(deadline: .now() + 0.005) {
-            EMClient.shared().log("1902387409128375098237450928374509823740589723409857190238740912837509823745092837450982374058972340985719023874091283750982374509283745098237405897234098571902387409128375098237450928374509823740589723409857190238740912837509823745092837450982374058972340985719023874091283750982374509283745098237405897234098571902387409128375098237450928374509823740589723409857")
+            EMClient.shared().log("19023874091283750982374509283745098237405897234098571902387409128375098237450928374509823740589723409857")
             self.addLog();
         }
     }
@@ -691,7 +700,7 @@ extension ViewController: EMChatManagerDelegate {
         
         for msg in aMessages {
             if msg.body.type == .image {
-                let formateMessage = EMChatMessage(conversationID: "lxm3", body: msg.body, ext: nil)
+                let formateMessage = EMChatMessage(conversationID: "du003", body: msg.body, ext: nil)
                 EMClient.shared().chatManager?.send(formateMessage, progress: nil) {
                     _,_ in
                 }
@@ -839,7 +848,7 @@ extension ViewController: UIImagePickerControllerDelegate
         if let image = info[.originalImage] as? UIImage,
            let data = image.jpegData(compressionQuality: 1.0) {
             let imageData = EMImageMessageBody(data: data, displayName: "IMG_8791.jpg")
-            let msg = EMChatMessage(conversationID: "lxm", body: imageData, ext: nil)
+            let msg = EMChatMessage(conversationID: "du001", body: imageData, ext: nil)
             EMClient.shared().chatManager?.send(msg, progress: nil) {
                 [weak self] msg, err in
                 if let error = err {
