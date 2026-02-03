@@ -1219,8 +1219,13 @@ class DocumentPickerDelegate: NSObject, UIDocumentPickerDelegate {
 
 // MARK: - Preview
 
-struct LZ4CompressionTestView_Previews: PreviewProvider {
-    static var previews: some View {
-        LZ4CompressionTestView()
-    }
-}
+//struct LZ4CompressionTestView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        LZ4CompressionTestView()
+//    }
+//}
+
+// ✅ 新写法 (iOS 17+/Xcode 15+) - 推荐
+//#Preview {
+//    LZ4CompressionTestView()
+//}
