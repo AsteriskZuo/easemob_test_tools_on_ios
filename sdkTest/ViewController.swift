@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 import HyphenateChat
 
 //let Appkey = "sandbox-dee1#wdtest"
@@ -14,11 +15,16 @@ import HyphenateChat
 //let Appkey = "52117440#955012"
 //let Appkey = "81381637#1096661"
 //let Appkey = "81446724#514456"
-
-
-let Appkey = "easemob#easeim"
+//let Appkey = "easemob#easeim"
+//let Appkey = "1135220126133718#demo"
+//let Appkey = "easemob-demo#chatdemoui"
+//let Appkey = "1135220126133718#demo"
+//let Appkey = "easemob-demo#zhangchao"
+let Appkey = "easemob-demo#testngi01"
 let useSandbox = false
 let useAppId = false
+var count = 0
+let autoInit = false
 
 var msgStrings = [
             "豫章故郡，洪都新府2。星分翼轸，地接衡庐",
@@ -46,20 +52,22 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
     var messageId: String? = "1393146528809355220"
     var messageCount: Int = 0
     var tryTime = 0;
-    var chatroomId = "268846180139015"
-    var groupId = "277822917640195"
+    var chatroomId = "278468009984001"
+    var groupId = "278468112744449"
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        initView()
-        initSDK()
+        if autoInit == true {
+            initView()
+            initSDK()
+        }
     }
     deinit {
     }
     public func initView() {
         self.pwdField.text = "1"
-        self.userIdField.text = "du001"
-        self.conversationIdField.text = "du002"
+        self.userIdField.text = "tst"
+        self.conversationIdField.text = "tst01"
         self.textField.text = "hello world"
     }
     func loginWithPwd() {
@@ -101,35 +109,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
         }
     }
     @IBAction func sendAction(_ sender: Any) {
-//        EMClient.shared().roomManager?.getChatroomsFromServer(withPage: 0, pageSize: 10, completion: { [weak self] result, e in
-//            if let list = result?.list {
-//                EMClient.shared().roomManager?.joinChatroom(list.first?.chatroomId ?? "",ext: "kuoz", leaveOtherRooms: true, completion: { rm, e in
-//                    if e == nil {
-//                        self?.printLog("joinChatroom:\(rm?.chatroomId ?? "") ext:kuoz")
-//                    }
-//                })
-//            }
-//        })
-//        return
-        if let text = self.textField.text {
-//            for _ in 0...1000 {
-//                text = text.appending("hello world")
-//            }
-            let body = EMTextMessageBody(text: "hello")
-            //body.targetLanguages = ["en","ja","de"]
-            let msg = EMChatMessage(conversationID: self.groupId, body: body, ext:["intValue":32,"boolValue":true,"doubleValue":3.14,"uintValue":UInt32(32),"int64Value":Int64(32),"stringValue":"oldString","jsonStringValue":["childKey": "childValue"]])
-            msg.chatType = .groupChat
-                EMClient.shared().chatManager?.send(msg, progress: nil, completion: { msg, err in
-                    if err == nil {
-                        self.messageId = msg?.messageId ?? ""
-                        self.printLog("send message success")
-                    } else {
-                        self.printLog("send message err")
-                    }
-                    
-                })
-            
-        }
+        testHttpGet()
     }
     
     func fetchHistoryMessage(conversationId: String,cursor: String) {
@@ -149,9 +129,10 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     @IBAction func sendFileAction(_ sender: Any) {
-        let msgBody = EMCombineMessageBody(title: "dd", summary: "dads", compatibleText: "asdf", messageIdList: [])
-        EMClient.shared().chatManager?.send(EMChatMessage(conversationID: "du002", body: msgBody, ext: nil), progress: nil)
- //       sendFileMessage()
+//        let msgBody = EMCombineMessageBody(title: "dd", summary: "dads", compatibleText: "asdf", messageIdList: [])
+//        EMClient.shared().chatManager?.send(EMChatMessage(conversationID: "du002", body: msgBody, ext: nil), progress: nil)
+        testSendMessage()
+//        downloadAttachment();
 //        EMClient.shared().chatManager?.asyncFetchHistoryMessages(fromServer: "du001", conversationType: .chat, startMessageId: "", pageSize: 100, completion: { result, err in
 //            self.printLog("asyncFetchHistoryMessages:\(result?.list?.count ?? 0)")
 //        })
@@ -200,6 +181,58 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
 //            }
 //        }
 //    }
+    
+    func testSendMessage() {
+    //        EMClient.shared().roomManager?.getChatroomsFromServer(withPage: 0, pageSize: 10, completion: { [weak self] result, e in
+    //            if let list = result?.list {
+    //                EMClient.shared().roomManager?.joinChatroom(list.first?.chatroomId ?? "",ext: "kuoz", leaveOtherRooms: true, completion: { rm, e in
+    //                    if e == nil {
+    //                        self?.printLog("joinChatroom:\(rm?.chatroomId ?? "") ext:kuoz")
+    //                    }
+    //                })
+    //            }
+    //        })
+    //        return
+            
+            if var text = self.textField.text {
+//                for _ in 0...1000 {
+//                    text = text.appending("hello world")
+//                }
+                text = text.appending("""
+{ verison : MSYNC_V1, compress_algorimth : 0, command : SYNC, encrypt_type : [ 0 ], payload : { meta : { id : 176777389512187338, to : miggo_10048@conference.easemob.com, ns : CHAT, payload : { chattype : CHATROOM, from : miggo_2001635932659589121, to : miggo_10048, contents : [ { contenttype : CUSTOM, event : ROOM_CHAT, customexts : [ { key : data, type : 7, value : {"type":"ROOM_CHAT","data":"{\"type\":\"GIFT\",\"badgeUrls\":[\"https://miggo.oss-ap-southeast-1.aliyuncs.com/other/manager-15f1274c-672c-4981-92ad-ea7da88d1086.png\"],\"vipInfo\":{\"type\":\"MARQUIS\",\"badgeUrl\":\"https://miggo.oss-ap-southeast-1.aliyuncs.com/svga_cover/manager-a48640ae-9dcf-45a3-88b0-12b850ccd8c7.png\"},\"userProfile\":{\"id\":\"2001635932659589121\",\"account\":\"10048\",\"userAvatar\":\"https://dev-yuyin.oss-ap-southeast-1.aliyuncs.com/avatar/c311e981-2080-4ff9-bdf5-110329924ba1.jpg\",\"userNickname\":\"box1\",\"userSex\":1,\"age\":29,\"freezingTime\":1766004570000,\"countryId\":\"1231833304232112130\",\"countryName\":\"India\",\"countryCode\":\"IN\",\"regionCode\":\"OTHER\",\"originSys\":\"MIGGO\",\"sysOriginChild\":\"MIGGO\",\"del\":false,\"createTime\":1766090970000,\"bornYear\":1996,\"bornMonth\":1,\"bornDay\":1,\"useProps\":[{\"userId\":\"2001635932659589121\",\"propsResources\":{\"id\":\"2005473358830690306\",\"type\":\"NOBLE_VIP\",\"code\":\"VIP3\",\"name\":\"MARQUIS\",\"cover\":\"https://miggo.oss-ap-southeast-1.aliyuncs.com/svga_cover/manager-a48640ae-9dcf-45a3-88b0-12b850ccd8c7.png\",\"sourceUrl\":\"https://miggo.oss-ap-southeast-1.aliyuncs.com/svgasource/manager-c1e11c97-074d-4e28-8b76-4914d4aa9efa.svga\",\"expand\":\"\",\"amount\":30000.0},\"expireTime\":1769582552000,\"allowGive\":null}],\"wearBadge\":[{\"id\":\"1565533277562978305\",\"badgeLevel\":5,\"milestone\":\"0\",\"badgeName\":\"SVIP5\",\"type\":\"ACTIVITY\",\"badgeKey\":\"svip5_badge\",\"selectUrl\":\"https://miggo.oss-ap-southeast-1.aliyuncs.com/other/manager-15f1274c-672c-4981-92ad-ea7da88d1086.png\",\"notSelectUrl\":\"\",\"animationUrl\":\"https://miggo.oss-ap-southeast-1.aliyuncs.com/other/manager-7f5f13b8-0830-4c19-b4f9-3ffcf05eb69b.svga\"}],\"ownSpecialId\":null,\"userLevel\":null,\"inRoomId\":null,\"roomIcon\":null,\"accountStatus\":\"NORMAL\",\"sameRegion\":true,\"isUpdateCountry\":\"1\"},\"chatBubble\":\"\",\"giftMsg\":{\"sender\":{\"id\":\"2001635932659589121\",\"userName\":\"box1\",\"userPic\":\"https://dev-yuyin.oss-ap-southeast-1.aliyuncs.com/avatar/c311e981-2080-4ff9-bdf5-110329924ba1.jpg\"},\"sendGiftAllType\":\"ON_MIC\",\"giftList\":[{\"giftId\":\"2006262610737274881\",\"giftPic\":\"https://miggo.oss-ap-southeast-1.aliyuncs.com/gifts/manager-83303ab8-9d49-498b-80b7-9a73c91d7994.png\",\"giftSourceUrl\":\"\",\"special\":\"\",\"currencyType\":\"\",\"giftTab\":\"LUCKY_GIFT\",\"giftCount\":1,\"giftPrice\":10,\"rewardMultiple\":1}],\"receiverList\":[{\"receiverId\":\"2001635932659589121\",\"receiverName\":\"box1\",\"receiverAvatar\":\"https://dev-yuyin.oss-ap-southeast-1.aliyuncs.com/avatar/c311e981-2080-4ff9-bdf5-110329924ba1.jpg\",\"jumpCombo\":9,\"giftIds\":[\"2006262610737274881\"]}],\"sendGiftTime\":1767773895121,\"target\":1},\"svipLevel\":\"SVIP_5\"}"} } ] } ] } } } }
+""")
+                let text2 = """
+{ verison : MSYNC_V1, compress_algorimth : 0, command : SYNC, encrypt_type : [ 0 ], payload : { meta : { id : 176777389545562847, to : miggo_10048@conference.easemob.com, ns : CHAT, payload : { chattype : CHATROOM, from : miggo_2001635932659589121, to : miggo_10048, contents : [ { contenttype : CUSTOM, event : ROOM_CHAT, customexts : [ { key : data, type : 7, value : {"type":"ROOM_CHAT","data":"{\"type\":\"GIFT\",\"badgeUrls\":[\"https://miggo.oss-ap-southeast-1.aliyuncs.com/other/manager-15f1274c-672c-4981-92ad-ea7da88d1086.png\"],\"vipInfo\":{\"type\":\"MARQUIS\",\"badgeUrl\":\"https://miggo.oss-ap-southeast-1.aliyuncs.com/svga_cover/manager-a48640ae-9dcf-45a3-88b0-12b850ccd8c7.png\"},\"userProfile\":{\"id\":\"2001635932659589121\",\"account\":\"10048\",\"userAvatar\":\"https://dev-yuyin.oss-ap-southeast-1.aliyuncs.com/avatar/c311e981-2080-4ff9-bdf5-110329924ba1.jpg\",\"userNickname\":\"box1\",\"userSex\":1,\"age\":29,\"freezingTime\":1766004570000,\"countryId\":\"1231833304232112130\",\"countryName\":\"India\",\"countryCode\":\"IN\",\"regionCode\":\"OTHER\",\"originSys\":\"MIGGO\",\"sysOriginChild\":\"MIGGO\",\"del\":false,\"createTime\":1766090970000,\"bornYear\":1996,\"bornMonth\":1,\"bornDay\":1,\"useProps\":[{\"userId\":\"2001635932659589121\",\"propsResources\":{\"id\":\"2005473358830690306\",\"type\":\"NOBLE_VIP\",\"code\":\"VIP3\",\"name\":\"MARQUIS\",\"cover\":\"https://miggo.oss-ap-southeast-1.aliyuncs.com/svga_cover/manager-a48640ae-9dcf-45a3-88b0-12b850ccd8c7.png\",\"sourceUrl\":\"https://miggo.oss-ap-southeast-1.aliyuncs.com/svgasource/manager-c1e11c97-074d-4e28-8b76-4914d4aa9efa.svga\",\"expand\":\"\",\"amount\":30000.0},\"expireTime\":1769582552000,\"allowGive\":null}],\"wearBadge\":[{\"id\":\"1565533277562978305\",\"badgeLevel\":5,\"milestone\":\"0\",\"badgeName\":\"SVIP5\",\"type\":\"ACTIVITY\",\"badgeKey\":\"svip5_badge\",\"selectUrl\":\"https://miggo.oss-ap-southeast-1.aliyuncs.com/other/manager-15f1274c-672c-4981-92ad-ea7da88d1086.png\",\"notSelectUrl\":\"\",\"animationUrl\":\"https://miggo.oss-ap-southeast-1.aliyuncs.com/other/manager-7f5f13b8-0830-4c19-b4f9-3ffcf05eb69b.svga\"}],\"ownSpecialId\":null,\"userLevel\":null,\"inRoomId\":null,\"roomIcon\":null,\"accountStatus\":\"NORMAL\",\"sameRegion\":true,\"isUpdateCountry\":\"1\"},\"chatBubble\":\"\",\"giftMsg\":{\"sender\":{\"id\":\"2001635932659589121\",\"userName\":\"box1\",\"userPic\":\"https://dev-yuyin.oss-ap-southeast-1.aliyuncs.com/avatar/c311e981-2080-4ff9-bdf5-110329924ba1.jpg\"},\"sendGiftAllType\":\"ON_MIC\",\"giftList\":[{\"giftId\":\"2006262610737274881\",\"giftPic\":\"https://miggo.oss-ap-southeast-1.aliyuncs.com/gifts/manager-83303ab8-9d49-498b-80b7-9a73c91d7994.png\",\"giftSourceUrl\":\"\",\"special\":\"\",\"currencyType\":\"\",\"giftTab\":\"LUCKY_GIFT\",\"giftCount\":1,\"giftPrice\":10,\"rewardMultiple\":1}],\"receiverList\":[{\"receiverId\":\"2001635932659589121\",\"receiverName\":\"box1\",\"receiverAvatar\":\"https://dev-yuyin.oss-ap-southeast-1.aliyuncs.com/avatar/c311e981-2080-4ff9-bdf5-110329924ba1.jpg\",\"jumpCombo\":10,\"giftIds\":[\"2006262610737274881\"]}],\"sendGiftTime\":1767773895455,\"target\":1},\"svipLevel\":\"SVIP_5\"}"} } ] } ] } } } }
+"""
+                let text3 = "hell, world"
+                count += 1
+                let body = EMTextMessageBody(text: ((count % 2) != 0) ? text : text2)
+//                let body = EMTextMessageBody(text: text3)
+                //body.targetLanguages = ["en","ja","de"]
+                let msg = EMChatMessage(conversationID: self.conversationIdField.text!, body: body, ext:["intValue":32,"boolValue":true,"doubleValue":3.14,"uintValue":UInt32(32),"int64Value":Int64(32),"stringValue":"oldString","jsonStringValue":["childKey": "childValue"]])
+                msg.chatType = .chat
+                    EMClient.shared().chatManager?.send(msg, progress: nil, completion: { msg, err in
+                        if err == nil {
+                            self.messageId = msg?.messageId ?? ""
+                            test_remove_group_member.receivedMessageIds.append(self.messageId ?? "123")
+                            self.printLog("send message success")
+                        } else {
+                            let errorCode = err?.code ?? EMErrorCode.noError
+                            let errorDescription = err?.errorDescription ?? "Unknown error"
+                            let logContent = "send message err: 错误码(\(errorCode)) - 描述: \(errorDescription)"
+                            self.printLog(logContent)
+                        }
+                        
+                    })
+                
+            }
+    }
+    
+    func testHttpGet() {
+        EMClient.shared().contactManager?.getContactsFromServer(completion: { list, error in
+            self.printLog("error \(String(describing: error?.description))")
+        })
+    }
     
     func generateData() {
         printLog("generateData begin")
@@ -335,7 +368,11 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     @IBAction func testAction(_ sender: Any) {
-        test_remove_group_member_api()
+        // 显示 LZ4CompressionTest 页面
+        // showLZ4CompressionTest()
+        
+        // 自定义测试行为
+//        test_remove_group_member_api()
 //        for i in 0...10 {
 //            mockTask(urlString: "https://downloadsdk.easemob.com/downloads/IMDemo/native.zip",index: i)
 //        }
@@ -552,13 +589,44 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
     func test_remove_group_member_api() {
         // 创建GroupMemberTestAPI实例并调用测试方法
         let testAPI = test_remove_group_member(viewController: self)
-        testAPI.test_remove_group_member_api()
+//        testAPI.test_remove_group_member_api()
+        testAPI.test_remove_group_meber_message_case()
+    }
+    
+    // 显示 MediaFilePickerTest SwiftUI 页面
+    func showMediaFilePickerTest() {
+        let mediaFilePickerView = MediaFilePickerTest()
+        let hostingController = UIHostingController(rootView: mediaFilePickerView)
+        hostingController.modalPresentationStyle = .fullScreen
+        
+        // 模态展示
+        self.present(hostingController, animated: true, completion: nil)
+    }
+    
+    // 显示 LZ4CompressionTest SwiftUI 页面
+    func showLZ4CompressionTest() {
+        let lz4TestView = LZ4CompressionTestView()
+        let hostingController = UIHostingController(rootView: lz4TestView)
+        hostingController.title = "LZ4 压缩测试"
+        
+        // 确保视图不会延伸到导航栏和底部安全区域下方
+        hostingController.edgesForExtendedLayout = []
+        hostingController.extendedLayoutIncludesOpaqueBars = false
+        
+        // 使用 push 导航，避免模态嵌套问题
+        if let navigationController = self.navigationController {
+            navigationController.pushViewController(hostingController, animated: true)
+        } else {
+            // 如果没有 NavigationController，则使用模态展示作为 fallback
+           hostingController.modalPresentationStyle = .fullScreen
+           self.present(hostingController, animated: true, completion: nil)
+        }
     }
 }
 
 extension ViewController: EMLogDelegate {
     func logDidOutput(_ log: String) {
-        
+
     }
 }
 
@@ -586,7 +654,9 @@ extension ViewController {
         //options.includeSendMessageInMessageListener = false
         //options.useReplacedMessageContents = true
         options.apnsCertName = "EaseIM_APNS_Developer"
+//        options.setValue("https://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/zuoyu/dns/1135220126133718_demo.json", forKey: "dnsURL")
         //options.workPathCopiable = true
+//        options.dohVendor = 0
         if useSandbox {
             useSpecialServer(options)
         }
@@ -605,19 +675,31 @@ extension ViewController {
 //        EMClient.shared().addMultiDevices(delegate: self, queue: nil)
         EMClient.shared().groupManager?.add(self, delegateQueue: nil)
         EMClient.shared().roomManager?.add(self, delegateQueue: nil)
-        //EMClient.shared.addLog(delegate: self, queue: nil)
+        // EMClient.shared.addLog(delegate: self, queue: nil)
+        
+        // Add message listener from test_remove_group_member
+        test_remove_group_member.setupMessageListener()
     }
     
     func useSpecialServer(_ options: EMOptions) {
         // 必须将enableDnsConfig设置为false
         options.setValue(false, forKey: "enableDnsConfig")
         // 设置IM长连接服务器
-        options.setValue("180.184.143.60", forKey: "chatServer")
-        options.setValue(6717, forKey: "chatPort")
+//        options.setValue("msync-im1-std-ga.easemob.com", forKey: "chatServer")
+        // 10.202.1.35
+        // 81.70.142.13
+        options.setValue("81.70.142.13", forKey: "chatServer")
+//        options.setValue("msync-im1.easemob.com", forKey: "chatServer")
+//        options.setValue(6717, forKey: "chatPort")
+        options.setValue(4300, forKey: "chatPort")
+//        options.setValue(443, forKey: "chatPort")
         // 设置IM Rest服务器
+//        options.setValue("https://[2408:4000:200::c5]", forKey: "restServer")
+//        options.setValue("https://a1.easemob.com", forKey: "restServer")
         options.setValue("https://a1-hsb.easemob.com", forKey: "restServer")
         // 连接TLS的IM长连接服务器，需要设置enableTLSConnection为true；否则，不需要单独设置enableTLSConnection
         //options.setValue(false, forKey: "enableTLSConnection")
+//        options.setValue("https://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/zuoyu/dns/1135220126133718_demo.json", forKey: "dnsURL")
     }
     
     func loginWith007Token() {
@@ -697,16 +779,35 @@ extension ViewController: EMChatManagerDelegate {
 //        }
     }
     func messagesDidReceive(_ aMessages: [EMChatMessage]) {
+        printLog("messagesDidReceive: \(aMessages)")
         
         for msg in aMessages {
-            if msg.body.type == .image {
-                let formateMessage = EMChatMessage(conversationID: "du003", body: msg.body, ext: nil)
-                EMClient.shared().chatManager?.send(formateMessage, progress: nil) {
-                    _,_ in
+//            testDownload(msg: msg)
+//            if msg.body.type == .image {
+//                let formateMessage = EMChatMessage(conversationID: "du003", body: msg.body, ext: nil)
+//                EMClient.shared().chatManager?.send(formateMessage, progress: nil) {
+//                    _,_ in
+//                }
+//            }
+            // TODO: 如果是命令消息，则判断命令的名字，如果命令的名字是 sendMessage, 则发送消息给服务器
+            if msg.body.type == EMMessageBodyType.cmd {
+                if let cmdBody = msg.body as? EMCmdMessageBody {
+                    let action = cmdBody.action
+                    if action == "sendMessage" {
+                        testSendMessage()
+                    }
                 }
             }
         }
                 
+    }
+    
+    func testDownload(msg: EMChatMessage) {
+        if msg.body.type == .file {
+            EMClient.shared().chatManager?.downloadMessageAttachment(msg, progress: nil, completion: { newMsg, err in
+                self.printLog("download file finish: \(String(describing: err?.description))")
+            })
+        }
     }
     
     func cmdMessagesDidReceive(_ aCmdMessages: [EMChatMessage]) {
@@ -734,6 +835,8 @@ extension ViewController: EMChatManagerDelegate {
             printLog("onMessageContentChanged custom event:\(event),customExt:\(customExt),ext:\(message.ext)")
         case .combine(title: let title, summary: let summary, compatibleText: let compatibleText, messageIdList: let messageIdList):
             printLog("onMessageContentChanged combine title:\(title),summary:\(summary),compatibleText:\(compatibleText),ext:\(message.ext)")
+        case .cmd(action: let action):
+            printLog("onMessageContentChanged cmd action:\(action)")
         @unknown default:
             break
         }
@@ -762,6 +865,17 @@ extension ViewController: EMChatManagerDelegate {
 //}
 
 extension ViewController: UIDocumentPickerDelegate {
+    func downloadAttachment() {
+        // 获取最后一条消息，假设它是文件消息，下载它的附件。 可以先调用 sendFileMessage 发送一个文件消息
+        let msg = EMClient.shared().chatManager?.getMessageWithMessageId("1464454771413882288")
+        if msg != nil {
+            EMClient.shared().chatManager?.downloadMessageAttachment(msg!, progress: { value in
+                print("download progress: \(value)")
+            })
+        }
+    }
+    
+    
     func sendFileMessage() {
         let documentPicker = UIDocumentPickerViewController(documentTypes: ["public.content", "public.text", "public.source-code", "public.image", "public.jpeg", "public.png", "com.adobe.pdf", "com.apple.keynote.key", "com.microsoft.word.doc", "com.microsoft.excel.xls", "com.microsoft.powerpoint.ppt","public.data","public.heic"], in: .open)
         documentPicker.delegate = self
@@ -790,9 +904,11 @@ extension ViewController: UIDocumentPickerDelegate {
 //                }
 
                 //print("token:\(EMClient.shared().accessUserToken)")
-                //if let data = FileManager.default.contents(atPath: selectedFileURL.path) {
-                    //let ret = FileManager.default.createFile(atPath: FileManager.default.temporaryDirectory.path + "/tmp", contents: data)
-                    let fileMessageBody = EMFileMessageBody(localPath: "", displayName: selectedFileURL.lastPathComponent)
+                if let data = FileManager.default.contents(atPath: selectedFileURL.path) {
+                    let ret = FileManager.default.createFile(atPath: FileManager.default.temporaryDirectory.path + "/tmp", contents: data)
+                    let tempFile = FileManager.default.temporaryDirectory.path + "/tmp"
+                    printLog("file1: \(selectedFileURL.path), \(tempFile)")
+                    let fileMessageBody = EMFileMessageBody(localPath: tempFile, displayName: selectedFileURL.lastPathComponent)
                     //fileMessageBody?.isGif = true
                     let msg = EMChatMessage(conversationID: self.conversationIdField.text ?? "", body: fileMessageBody, ext: ["originExtKey":"originExtValue"])
                     EMClient.shared().chatManager?.send(msg, progress: nil) {
@@ -811,7 +927,7 @@ extension ViewController: UIDocumentPickerDelegate {
 //                            }
                             
                         }
-                   // }
+                    }
                 }
                 selectedFileURL.stopAccessingSecurityScopedResource()
             } else {
