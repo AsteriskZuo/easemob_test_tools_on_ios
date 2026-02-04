@@ -28,6 +28,9 @@ class LZ4LogCollector {
     private var totalCompressedSize: Int = 0
     private var totalOriginalSize: Int = 0
     
+    // 监听器
+    private var onCountChanged: ((_ count: Int) -> Void)?
+    
     // 正则表达式（预编译）
     // 压缩或者解压缩日志
     private let lz4Pattern = try? NSRegularExpression(
@@ -143,6 +146,7 @@ class LZ4LogCollector {
             self.entryCount += 1
             self.totalCompressedSize += entry.compressedSize
             self.totalOriginalSize += entry.originalSize
+            self.onCountChanged?(self.entryCount)
         }
     }
     
@@ -207,6 +211,11 @@ class LZ4LogCollector {
             self.totalCompressedSize = 0
             self.totalOriginalSize = 0
         }
+    }
+    
+    /// 设置收集监听器
+    func setOnCountChanged(_ callback: @escaping (_ count: Int) -> Void) {
+        self.onCountChanged = callback
     }
 }
 
@@ -436,6 +445,7 @@ class LZ4CompressionTestViewModel: ObservableObject {
     // MARK: - Statistics
     @Published var statEntries: [LZ4StatEntry] = []
     @Published var statisticsPreview: String = ""
+    @Published var logCount: Int = 0
     
     // MARK: - Log
     @Published var logText: String = ""
@@ -681,6 +691,11 @@ class LZ4CompressionTestViewModel: ObservableObject {
         let outputPath = "\(outputDirectory)/output.md"
         
         if LZ4LogCollector.shared.startCollecting(outputPath: outputPath) {
+            LZ4LogCollector.shared.setOnCountChanged { count in
+                DispatchQueue.main.async {
+                    self.logCount = count
+                }
+            }
             appendLog("开始收集 LZ4 日志...")
             appendLog("日志将实时写入: \(outputPath)")
         } else {
@@ -949,7 +964,7 @@ struct LZ4CompressionTestView: View {
             HStack {
                 Text("已收集:")
                     .frame(width: 100, alignment: .leading)
-                Text("\(LZ4LogCollector.shared.count) 条 LZ4 日志")
+                Text("\(viewModel.logCount) 条 LZ4 日志")
                     .foregroundColor(.blue)
             }
             
