@@ -2,12 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "absolute:/Users/asterisk/Codes/easemob/emclient-ios/newSDK/HyphenateSDK.xcodeproj">
+      location = "group:sdkTest.xcodeproj">
    </FileRef>
    <FileRef
-      location = "absolute:/Users/asterisk/Codes/easemob/emclient-linux/ios_build/build/ioseasemob.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "container:sdkTest.xcodeproj">
+      location = "group:Pods/Pods.xcodeproj">
    </FileRef>
 </Workspace>

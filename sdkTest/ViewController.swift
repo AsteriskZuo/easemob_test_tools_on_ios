@@ -264,7 +264,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
         if let msg = EMClient.shared().chatManager?.getMessageWithMessageId("1384637766834325460") {
             let body = msg.body as! EMVideoMessageBody
             print("image msg.localPath:\(body.localPath ?? ""),thumbnailLocalPath:\(body.thumbnailLocalPath ?? "")")
-            EMClient.shared.chatManager?.modifyMessage("1384637766834325460", body: EMVideoMessageBody(localPath: "dafasdf", displayName: "dddd"), completion: { e, msg in
+            EMClient.shared().chatManager?.modifyMessage("1384637766834325460", body: EMVideoMessageBody(localPath: "dafasdf", displayName: "dddd"), completion: { e, msg in
                 
             })
         }
@@ -818,28 +818,28 @@ extension ViewController: EMChatManagerDelegate {
     }
     
     func onMessageContentChanged(_ message: EMChatMessage, operatorId: String, operationTime: UInt) {
-        switch message.swiftBody {
-        case .text(content: let content):
-            printLog("onMessageContentChanged text:\(content),ext:\(message.ext)")
-        case .image(localPath: let localPath, displayName: let displayName):
-            printLog("onMessageContentChanged image localPath:\(localPath),displayName:\(displayName),ext:\(message.ext)")
-        case .video(localPath: let localPath, displayName: let displayName):
-            printLog("onMessageContentChanged video localPath:\(localPath),displayName:\(displayName),ext:\(message.ext)")
-        case .location(latitude: let latitude, longitude: let longitude, address: let address, buildingName: let buildingName):
-            printLog("onMessageContentChanged location latitude:\(latitude),longitude:\(longitude),address:\(address),buildingName:\(buildingName),ext:\(message.ext)")
-        case .voice(localPath: let localPath, displayName: let displayName):
-            printLog("onMessageContentChanged voice localPath:\(localPath),displayName:\(displayName),ext:\(message.ext)")
-        case .file(localPath: let localPath, displayName: let displayName):
-            printLog("onMessageContentChanged file localPath:\(localPath),displayName:\(displayName),ext:\(message.ext)")
-        case .custom(event: let event, customExt: let customExt):
-            printLog("onMessageContentChanged custom event:\(event),customExt:\(customExt),ext:\(message.ext)")
-        case .combine(title: let title, summary: let summary, compatibleText: let compatibleText, messageIdList: let messageIdList):
-            printLog("onMessageContentChanged combine title:\(title),summary:\(summary),compatibleText:\(compatibleText),ext:\(message.ext)")
-        case .cmd(action: let action):
-            printLog("onMessageContentChanged cmd action:\(action)")
-        @unknown default:
-            break
-        }
+//        switch message.swiftBody {
+//        case .text(content: let content):
+//            printLog("onMessageContentChanged text:\(content),ext:\(message.ext)")
+//        case .image(localPath: let localPath, displayName: let displayName):
+//            printLog("onMessageContentChanged image localPath:\(localPath),displayName:\(displayName),ext:\(message.ext)")
+//        case .video(localPath: let localPath, displayName: let displayName):
+//            printLog("onMessageContentChanged video localPath:\(localPath),displayName:\(displayName),ext:\(message.ext)")
+//        case .location(latitude: let latitude, longitude: let longitude, address: let address, buildingName: let buildingName):
+//            printLog("onMessageContentChanged location latitude:\(latitude),longitude:\(longitude),address:\(address),buildingName:\(buildingName),ext:\(message.ext)")
+//        case .voice(localPath: let localPath, displayName: let displayName):
+//            printLog("onMessageContentChanged voice localPath:\(localPath),displayName:\(displayName),ext:\(message.ext)")
+//        case .file(localPath: let localPath, displayName: let displayName):
+//            printLog("onMessageContentChanged file localPath:\(localPath),displayName:\(displayName),ext:\(message.ext)")
+//        case .custom(event: let event, customExt: let customExt):
+//            printLog("onMessageContentChanged custom event:\(event),customExt:\(customExt),ext:\(message.ext)")
+//        case .combine(title: let title, summary: let summary, compatibleText: let compatibleText, messageIdList: let messageIdList):
+//            printLog("onMessageContentChanged combine title:\(title),summary:\(summary),compatibleText:\(compatibleText),ext:\(message.ext)")
+//        case .cmd(action: let action):
+//            printLog("onMessageContentChanged cmd action:\(action)")
+//        @unknown default:
+//            break
+//        }
     }
     
 //    func onMessagePinChanged(_ messageId: String, conversationId: String, operation pinOperation: EMMessagePinOperation, pinInfo: EMMessagePinInfo) {
@@ -1023,7 +1023,7 @@ extension ViewController: EMClientDelegate {
     
     // 当前账号被强制退出登录，有以下原因：密码被修改；登录设备数过多；服务被封禁; 被强制下线;
     func userAccountDidForced(toLogout aError: EMError?) {
-        EMClient.shared.logout(false)
+        EMClient.shared().logout(false)
     }
     
     func autoLoginDidCompleteWithError(_ aError: EMError?) {

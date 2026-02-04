@@ -1,0 +1,20 @@
+PODS:
+  - HyphenateChat (4.19.0):
+    - ShengwangInfra_iOS (~> 1.3.0)
+  - ShengwangInfra_iOS (1.3.5)
+
+DEPENDENCIES:
+  - HyphenateChat (= 4.19.0)
+
+SPEC REPOS:
+  trunk:
+    - HyphenateChat
+    - ShengwangInfra_iOS
+
+SPEC CHECKSUMS:
+  HyphenateChat: 79468de4022d81ecf69e6f69f50f586c969a0e79
+  ShengwangInfra_iOS: 0ae2d429ec428cdbaebb39ac883ec64c5c20f7bb
+
+PODFILE CHECKSUM: fbc711a2cf02dde53381c752d5c9a42fdc7d0150
+
+COCOAPODS: 1.16.2

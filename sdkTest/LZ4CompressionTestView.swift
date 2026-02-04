@@ -472,7 +472,7 @@ class LZ4CompressionTestViewModel: ObservableObject {
         EMClient.shared().initializeSDK(with: options)
         
         // 注册日志代理
-        EMClient.shared.addLog(delegate: logDelegate, queue: nil)
+        EMClient.shared().addLog(delegate: logDelegate, queue: nil)
         
         DispatchQueue.main.async {
             self.isSDKInitialized = true
