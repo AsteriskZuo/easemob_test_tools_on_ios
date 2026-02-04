@@ -264,7 +264,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
         if let msg = EMClient.shared().chatManager?.getMessageWithMessageId("1384637766834325460") {
             let body = msg.body as! EMVideoMessageBody
             print("image msg.localPath:\(body.localPath ?? ""),thumbnailLocalPath:\(body.thumbnailLocalPath ?? "")")
-            EMClient.shared.chatManager?.modifyMessage("1384637766834325460", body: EMVideoMessageBody(localPath: "dafasdf", displayName: "dddd"), completion: { e, msg in
+            EMClient.shared().chatManager?.modifyMessage("1384637766834325460", body: EMVideoMessageBody(localPath: "dafasdf", displayName: "dddd"), completion: { e, msg in
                 
             })
         }
@@ -1023,7 +1023,7 @@ extension ViewController: EMClientDelegate {
     
     // 当前账号被强制退出登录，有以下原因：密码被修改；登录设备数过多；服务被封禁; 被强制下线;
     func userAccountDidForced(toLogout aError: EMError?) {
-        EMClient.shared.logout(false)
+        EMClient.shared().logout(false)
     }
     
     func autoLoginDidCompleteWithError(_ aError: EMError?) {

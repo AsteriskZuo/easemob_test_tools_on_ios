@@ -1,0 +1,10 @@
+[project]
+name = "send-message"
+version = "0.1.0"
+description = "Easemob 消息发送工具 - 从 data 文件夹读取 JSON 数据并发送消息"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "httpx>=0.27.0",
+    "python-dotenv>=1.0.0",
+]
