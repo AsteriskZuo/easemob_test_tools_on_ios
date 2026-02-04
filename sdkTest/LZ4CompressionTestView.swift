@@ -62,6 +62,7 @@ class LZ4LogCollector {
             if fileManager.createFile(atPath: outputPath, contents: nil, attributes: nil) {
                 self.fileHandle = FileHandle(forWritingAtPath: outputPath)
                 self.isCollecting = true
+                self.onCountChanged?(self.entryCount)
                 return true
             }
             return false
