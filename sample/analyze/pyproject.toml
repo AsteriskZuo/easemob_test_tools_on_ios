@@ -1,0 +1,7 @@
+[project]
+name = "data-analyze"
+version = "0.1.0"
+description = "IM 数据分析工具 - 分析 JSONL 数据文件的结构和统计特征"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []

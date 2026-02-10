@@ -1,0 +1,7 @@
+[project]
+name = "data-sampler"
+version = "0.1.0"
+description = "IM 数据抽样工具 - 将大文件等分切割为多个小文件"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
