@@ -25,3 +25,4 @@
 - [iOS 应用使用说明](sdkTest/README.md)
 - [Python 工具使用说明](send_message/README.md)
 - [Python 数据抽样工具使用说明](sample/sampler/README.md)
+- [Python 数据抽样后处理工具使用说明](sample/filter/README.md)
