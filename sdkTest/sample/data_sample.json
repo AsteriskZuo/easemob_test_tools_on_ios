@@ -1,0 +1,64 @@
+{
+  "channel_channel": "1106210925091459#996box-live-prod_200280521113602@conference.easemob.com",
+  "meta_ext": {
+    "chat_type": "chat:room",
+    "write_channel": true,
+    "is_rest": true,
+    "route_type": "route_normal",
+    "msg_type": "custom",
+    "chat_route": "route_normal:chat:room:custom"
+  },
+  "meta_timestamp": 1769529622827,
+  "channel_user": "1106210925091459#996box-live-prod_user1411424978@easemob.com",
+  "chat_type": "chatroom",
+  "is_downgrade": false,
+  "content_type": "chat:room:custom",
+  "payload": {
+    "ext": {},
+    "bodies": [
+      {
+        "customExts": [
+          {
+            "uid": "1411424978"
+          },
+          {
+            "nickname": "深情"
+          },
+          {
+            "message": "深情退出直播间"
+          },
+          {
+            "live_no": "104453436"
+          },
+          {
+            "dec_hot": "0"
+          },
+          {
+            "ctime": "1769529622"
+          }
+        ],
+        "customEvent": "quit_room",
+        "v2:customExts": {
+          "uid": "1411424978",
+          "dec_hot": "0",
+          "live_no": "104453436",
+          "nickname": "深情",
+          "ctime": "1769529622",
+          "message": "深情退出直播间"
+        },
+        "type": "custom"
+      }
+    ],
+    "from": "user1411424978",
+    "msg_config": {},
+    "to": "200280521113602",
+    "type": "chatroom"
+  },
+  "writed_channel": false,
+  "from": "admin",
+  "to": "200280521113602",
+  "msg_id": "1511677403288571108",
+  "roam_ignore_users": [],
+  "direction": "outgoing",
+  "timestamp": 1769529622827
+}

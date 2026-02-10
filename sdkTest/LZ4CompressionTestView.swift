@@ -558,12 +558,9 @@ class LZ4CompressionTestViewModel: ObservableObject {
                let payload = json["payload"] as? [String: Any],
                let bodies = payload["bodies"] as? [[String: Any]],
                let firstBody = bodies.first {
-                // 优先返回 action，如果没有则返回 msg
-                if let action = firstBody["action"] as? String {
-                    return action
-                } else if let msg = firstBody["msg"] as? String {
-                    return msg
-                }
+                // 将 bodies 第一个元素序列化为 JSON 字符串返回
+                let bodyData = try JSONSerialization.data(withJSONObject: firstBody, options: [])
+                return String(data: bodyData, encoding: .utf8)
             }
         } catch {
             // 解析失败，跳过
