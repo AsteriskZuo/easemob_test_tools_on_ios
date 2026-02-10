@@ -1,0 +1,7 @@
+[project]
+name = "data-filter"
+version = "0.1.0"
+description = "IM 数据筛选工具 - 按比例从切割后的分片文件中筛选"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
