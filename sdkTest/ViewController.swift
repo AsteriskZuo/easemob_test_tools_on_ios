@@ -20,7 +20,14 @@ import HyphenateChat
 //let Appkey = "easemob-demo#chatdemoui"
 //let Appkey = "1135220126133718#demo"
 //let Appkey = "easemob-demo#zhangchao"
-let Appkey = "easemob-demo#testngi01"
+//let Appkey = "easemob-demo#testngi01"
+//let Appkey = "easemob-demo#wang"
+//let Appkey = "101251105104270#qa001" // NGI
+//let Appkey = "100260423254379#wang" // NGI
+//let Appkey = "easemob-demo#testngi01" // NGI
+//let Appkey = "easemob-demo#wang01"
+//let Appkey = "easemob#dutest"
+let Appkey = "easemob-demo#zuoyu"
 let useSandbox = false
 let useAppId = false
 var count = 0
@@ -56,25 +63,26 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
     var groupId = "278468112744449"
     override func viewDidLoad() {
         super.viewDidLoad()
+        initView()
         // Do any additional setup after loading the view.
         if autoInit == true {
-            initView()
             initSDK()
         }
     }
     deinit {
     }
     public func initView() {
-        self.pwdField.text = "1"
-        self.userIdField.text = "tst"
-        self.conversationIdField.text = "tst01"
+        self.pwdField.text = "YWMtO8UBmITeEfGWlnlOjP9Z02OE8DausEZYrzT2OfjZvQvIrwqQeQgR8YhsH1Mz3zKMAwMAAAGfg8r2rAABUYC67nEFlzBQ9jnH_3gcaXBL_ew8PFmI6Ah_0GLOY4diWQ"
+        self.userIdField.text = "zuoyu01"
+        self.conversationIdField.text = "zuoyu02"
         self.textField.text = "hello world"
     }
     func loginWithPwd() {
         
         if let userId = userIdField.text,
            let pwd = pwdField.text {
-            EMClient.shared().login(withUsername: userId, password: pwd) { [weak self] (aUsername, aError) in
+            EMClient.shared().login(withUsername: userId, token: pwd) { [weak self] (aUsername, aError) in
+//            EMClient.shared().login(withUsername: userId, password: pwd) { [weak self] (aUsername, aError) in
                 if let error = aError {
                     self?.printLog("login error: \(error.errorDescription ?? "")")
 //                    if error.code == .userNotFound {
@@ -109,7 +117,12 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
         }
     }
     @IBAction func sendAction(_ sender: Any) {
-        testHttpGet()
+//        testHttpGet()
+        testSendMessage()
+    }
+    
+    @IBAction func initSDKAction(_ sender: Any) {
+        initSDK()
     }
     
     func fetchHistoryMessage(conversationId: String,cursor: String) {
@@ -131,13 +144,13 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
     @IBAction func sendFileAction(_ sender: Any) {
 //        let msgBody = EMCombineMessageBody(title: "dd", summary: "dads", compatibleText: "asdf", messageIdList: [])
 //        EMClient.shared().chatManager?.send(EMChatMessage(conversationID: "du002", body: msgBody, ext: nil), progress: nil)
-        testSendMessage()
+//        testSendMessage()
 //        downloadAttachment();
 //        EMClient.shared().chatManager?.asyncFetchHistoryMessages(fromServer: "du001", conversationType: .chat, startMessageId: "", pageSize: 100, completion: { result, err in
 //            self.printLog("asyncFetchHistoryMessages:\(result?.list?.count ?? 0)")
 //        })
 //        generateData()
- //       self.sendFileMessage()
+//        self.sendFileMessage()
 //        if let imageFile = Bundle.main.path(forResource: "IMG_8791", ofType: "HEIC") {
 //            let imageBody = EMImageMessageBody(localPath: imageFile, displayName: "IMG_8791.heic")
 //            let msg = EMChatMessage(conversationID: self.conversationIdField.text ?? "", body: imageBody, ext: nil)
@@ -145,6 +158,14 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
 //
 //            })
 //        }
+        addContactRemark(username: "du002")
+    }
+    
+    func addContactRemark(username: String) {
+        var userId: String = "lxm8"
+        EMClient.shared().contactManager?.setContactRemark(userId, remark: username) { contact, error in
+            self.printLog("setContactRemark: error:\(error?.code ?? .noError) \(error?.errorDescription ?? "")")
+        }
     }
     
     func testPin() {
@@ -204,18 +225,34 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
                 let text2 = """
 { verison : MSYNC_V1, compress_algorimth : 0, command : SYNC, encrypt_type : [ 0 ], payload : { meta : { id : 176777389545562847, to : miggo_10048@conference.easemob.com, ns : CHAT, payload : { chattype : CHATROOM, from : miggo_2001635932659589121, to : miggo_10048, contents : [ { contenttype : CUSTOM, event : ROOM_CHAT, customexts : [ { key : data, type : 7, value : {"type":"ROOM_CHAT","data":"{\"type\":\"GIFT\",\"badgeUrls\":[\"https://miggo.oss-ap-southeast-1.aliyuncs.com/other/manager-15f1274c-672c-4981-92ad-ea7da88d1086.png\"],\"vipInfo\":{\"type\":\"MARQUIS\",\"badgeUrl\":\"https://miggo.oss-ap-southeast-1.aliyuncs.com/svga_cover/manager-a48640ae-9dcf-45a3-88b0-12b850ccd8c7.png\"},\"userProfile\":{\"id\":\"2001635932659589121\",\"account\":\"10048\",\"userAvatar\":\"https://dev-yuyin.oss-ap-southeast-1.aliyuncs.com/avatar/c311e981-2080-4ff9-bdf5-110329924ba1.jpg\",\"userNickname\":\"box1\",\"userSex\":1,\"age\":29,\"freezingTime\":1766004570000,\"countryId\":\"1231833304232112130\",\"countryName\":\"India\",\"countryCode\":\"IN\",\"regionCode\":\"OTHER\",\"originSys\":\"MIGGO\",\"sysOriginChild\":\"MIGGO\",\"del\":false,\"createTime\":1766090970000,\"bornYear\":1996,\"bornMonth\":1,\"bornDay\":1,\"useProps\":[{\"userId\":\"2001635932659589121\",\"propsResources\":{\"id\":\"2005473358830690306\",\"type\":\"NOBLE_VIP\",\"code\":\"VIP3\",\"name\":\"MARQUIS\",\"cover\":\"https://miggo.oss-ap-southeast-1.aliyuncs.com/svga_cover/manager-a48640ae-9dcf-45a3-88b0-12b850ccd8c7.png\",\"sourceUrl\":\"https://miggo.oss-ap-southeast-1.aliyuncs.com/svgasource/manager-c1e11c97-074d-4e28-8b76-4914d4aa9efa.svga\",\"expand\":\"\",\"amount\":30000.0},\"expireTime\":1769582552000,\"allowGive\":null}],\"wearBadge\":[{\"id\":\"1565533277562978305\",\"badgeLevel\":5,\"milestone\":\"0\",\"badgeName\":\"SVIP5\",\"type\":\"ACTIVITY\",\"badgeKey\":\"svip5_badge\",\"selectUrl\":\"https://miggo.oss-ap-southeast-1.aliyuncs.com/other/manager-15f1274c-672c-4981-92ad-ea7da88d1086.png\",\"notSelectUrl\":\"\",\"animationUrl\":\"https://miggo.oss-ap-southeast-1.aliyuncs.com/other/manager-7f5f13b8-0830-4c19-b4f9-3ffcf05eb69b.svga\"}],\"ownSpecialId\":null,\"userLevel\":null,\"inRoomId\":null,\"roomIcon\":null,\"accountStatus\":\"NORMAL\",\"sameRegion\":true,\"isUpdateCountry\":\"1\"},\"chatBubble\":\"\",\"giftMsg\":{\"sender\":{\"id\":\"2001635932659589121\",\"userName\":\"box1\",\"userPic\":\"https://dev-yuyin.oss-ap-southeast-1.aliyuncs.com/avatar/c311e981-2080-4ff9-bdf5-110329924ba1.jpg\"},\"sendGiftAllType\":\"ON_MIC\",\"giftList\":[{\"giftId\":\"2006262610737274881\",\"giftPic\":\"https://miggo.oss-ap-southeast-1.aliyuncs.com/gifts/manager-83303ab8-9d49-498b-80b7-9a73c91d7994.png\",\"giftSourceUrl\":\"\",\"special\":\"\",\"currencyType\":\"\",\"giftTab\":\"LUCKY_GIFT\",\"giftCount\":1,\"giftPrice\":10,\"rewardMultiple\":1}],\"receiverList\":[{\"receiverId\":\"2001635932659589121\",\"receiverName\":\"box1\",\"receiverAvatar\":\"https://dev-yuyin.oss-ap-southeast-1.aliyuncs.com/avatar/c311e981-2080-4ff9-bdf5-110329924ba1.jpg\",\"jumpCombo\":10,\"giftIds\":[\"2006262610737274881\"]}],\"sendGiftTime\":1767773895455,\"target\":1},\"svipLevel\":\"SVIP_5\"}"} } ] } ] } } } }
 """
-                let text3 = "hell, world"
+                let text3 = """
+                    The existence of group chat. In summary, Democritus once said, \"Moderation increases pleasure and intensifies enjoyment.\" This makes me think deeply. In this light, what happens when group chat occurs, and what happens when it doesn't? Napoleon Hill once said, \"Don't wait, the time will never be right.\" This seems to answer my doubts. Michael F. Staley once said, \"The most challenging challenge is self-improvement.\" This seems to answer my doubts. What happens when group chat occurs, and what happens when it doesn't? Bo once said, \"A failure only proves that our determination to succeed is not strong enough.\" This short statement by V.S. V.S. makes me think deeply. However, even so, the existence of group chat still represents a certain significance. Abraham Lincoln once said, \"It's not how many years you
+                    """
+                let text4 = """
+                    hello, world, \(count)
+                    """
                 count += 1
-                let body = EMTextMessageBody(text: ((count % 2) != 0) ? text : text2)
-//                let body = EMTextMessageBody(text: text3)
-                //body.targetLanguages = ["en","ja","de"]
+//                let body = EMTextMessageBody(text: ((count % 2) != 0) ? text : text2)
+                let body = EMTextMessageBody(text: text4)
+//                body.targetLanguages = ["fr"]
                 let msg = EMChatMessage(conversationID: self.conversationIdField.text!, body: body, ext:["intValue":32,"boolValue":true,"doubleValue":3.14,"uintValue":UInt32(32),"int64Value":Int64(32),"stringValue":"oldString","jsonStringValue":["childKey": "childValue"]])
+                
+                // 不设置，服务器走默认
+                // msg.webhookEnv = "" // 设置为空，服务器匹配不到，不走任何callbak，也不会报错
+                // msg.webhookEnv = "error" // 设置为不存在的值，不走任何callback，也不会报错
+//                msg.webhookEnv = "default" // 设置为默认值，走默认的callback
+//                msg.webhookEnv = "test" // 设置为test，服务器返回错误
+//                msg.webhookEnv = self.textField.text
+                
                 msg.chatType = .chat
                     EMClient.shared().chatManager?.send(msg, progress: nil, completion: { msg, err in
                         if err == nil {
                             self.messageId = msg?.messageId ?? ""
                             test_remove_group_member.receivedMessageIds.append(self.messageId ?? "123")
                             self.printLog("send message success")
+                            
+//                            var localmsg = EMClient.shared().chatManager?.getMessageWithMessageId("1556857593211650048")
+//                            self.printLog("msgId: \(localmsg?.messageId ?? ""), env: \(localmsg?.webhookEnv ?? "")")
                         } else {
                             let errorCode = err?.code ?? EMErrorCode.noError
                             let errorDescription = err?.errorDescription ?? "Unknown error"
@@ -647,18 +684,22 @@ extension ViewController {
         options.enableRequireReadAck = true
         options.loadEmptyConversations = true
         //options.autoLoadConversations = true
-        options.isAutoLogin = true
-        options.enableRequireReadAck = true
+        options.isAutoLogin = false
         options.enableDeliveryAck = true
+//        options.ntpServers = ["ntp1.aliyun.com:123", "time1.google.com:123"]
         //options.enableCrashReport = true
         //options.includeSendMessageInMessageListener = false
         //options.useReplacedMessageContents = true
         options.apnsCertName = "EaseIM_APNS_Developer"
 //        options.setValue("https://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/zuoyu/dns/1135220126133718_demo.json", forKey: "dnsURL")
+        options.setValue("https://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/zuoyu/dns/dns_ngi.json", forKey: "dnsURL")
         //options.workPathCopiable = true
 //        options.dohVendor = 0
+//        options.ntpType = 0
+        options.usingHttpsOnly = false
         if useSandbox {
-            useSpecialServer(options)
+//            useSpecialServer(options)
+            useNGINXServer(options)
         }
         
         EMClient.shared().initializeSDK(with: options)
@@ -681,6 +722,76 @@ extension ViewController {
         test_remove_group_member.setupMessageListener()
     }
     
+    func useZhangchaoServer(_ options: EMOptions) {
+        options.setValue(false, forKey: "enableDnsConfig")
+        options.setValue(false, forKey: "enableTLSConnection")
+        options.setValue("10.202.1.69", forKey: "chatServer")
+        options.setValue(4300, forKey: "chatPort")
+        options.setValue("http://10.202.1.69:8080", forKey: "restServer")
+    }
+    
+    func useQaServer(_ options: EMOptions) {
+        options.setValue(false, forKey: "enableDnsConfig")
+        options.setValue(false, forKey: "enableTLSConnection")
+        options.setValue("81.70.142.13", forKey: "chatServer")
+        options.setValue(6717, forKey: "chatPort")
+        options.setValue("http://a1-hsb.easemob.com", forKey: "restServer")
+    }
+    
+    func useEnvServer(_ options: EMOptions) {
+        options.setValue(false, forKey: "enableDnsConfig")
+        options.setValue(false, forKey: "enableTLSConnection")
+        options.setValue("42.193.118.34", forKey: "chatServer")
+        options.setValue(6717, forKey: "chatPort")
+        options.setValue("http://a1-hsb.easemob.com", forKey: "restServer")
+    }
+    
+    func useNGINXServer(_ options: EMOptions) {
+        options.setValue(false, forKey: "enableDnsConfig")
+        options.setValue(false, forKey: "enableTLSConnection")
+        options.setValue("tke-sdb-msync-im1.easemob.com", forKey: "chatServer") // enableTLSConnection = false
+//        options.setValue("tke-sdb-msync-tls.easemob.com", forKey: "chatServer") // enableTLSConnection = true
+        options.setValue(6717, forKey: "chatPort")
+        options.setValue("tke-sdb-im-api-wechat.easemob.com", forKey: "webSocketServer")
+        options.setValue(80, forKey: "webSocketPort")
+        options.setValue("https://tke-sdb-a1.easemob.com", forKey: "restServer")
+    }
+    
+    func useTKEServer(_ options: EMOptions) {
+        options.setValue(false, forKey: "enableDnsConfig")
+        options.setValue("https://tke-sdb-a1.easemob.com", forKey: "restServer")
+        options.setValue(true, forKey: "enableTLSConnection")
+        options.setValue("tke-sdb-msync-tls.easemob.com", forKey: "chatServer")
+        options.setValue(16717, forKey: "chatPort")
+        options.setValue("tke-sdb-im-api-wechat.easemob.com", forKey: "webSocketServer")
+        options.setValue(443, forKey: "webSocketPort")
+        options.setValue("tke-sdb-fusion.easemob.com", forKey: "syncDataWSHost")
+        options.setValue(443, forKey: "syncDataWSPort")
+    }
+    
+    func useDEVServer(_ options: EMOptions) {
+        options.setValue(false, forKey: "enableDnsConfig")
+        options.setValue("https://a1-hsb.easemob.com", forKey: "restServer")
+//        options.setValue("msync-im-hsb-tls.easemob.com", forKey: "chatServer")
+//        options.setValue(4300, forKey: "chatPort")
+//        options.setValue(true, forKey: "enableTLSConnection")
+        options.setValue("im-api-new-hsb.easemob.com", forKey: "webSocketServer")
+        options.setValue(80, forKey: "webSocketPort")
+        options.setValue(false, forKey: "enableTLSConnection")
+        options.setValue("172.29.0.128", forKey: "syncDataWSHost")
+        options.setValue(8086, forKey: "syncDataWSPort")
+    }
+    
+    func useQAServer(_ options: EMOptions) {
+        options.setValue(false, forKey: "enableDnsConfig")
+        options.setValue("https://a1-qa-hsb.easemob.com", forKey: "restServer")
+        options.setValue(true, forKey: "enableTLSConnection")
+        options.setValue("im-api-new-qa-hsb.easemob.com", forKey: "webSocketServer")
+        options.setValue(443, forKey: "webSocketPort")
+//        options.setValue("msync-im-qa-hsb.easemob.com", forKey: "chatServer")
+//        options.setValue(6717, forKey: "chatPort")
+    }
+    
     func useSpecialServer(_ options: EMOptions) {
         // 必须将enableDnsConfig设置为false
         options.setValue(false, forKey: "enableDnsConfig")
@@ -688,15 +799,22 @@ extension ViewController {
 //        options.setValue("msync-im1-std-ga.easemob.com", forKey: "chatServer")
         // 10.202.1.35
         // 81.70.142.13
-        options.setValue("81.70.142.13", forKey: "chatServer")
+//        options.setValue("81.70.142.13", forKey: "chatServer")
 //        options.setValue("msync-im1.easemob.com", forKey: "chatServer")
-//        options.setValue(6717, forKey: "chatPort")
-        options.setValue(4300, forKey: "chatPort")
+//        options.setValue("msync-im-qa-hsb.easemob.com", forKey: "chatServer")
+        options.setValue("tke-sdb-msync-im1.easemob.com", forKey: "chatServer")
+        options.setValue(6717, forKey: "chatPort")
+//        options.setValue(4300, forKey: "chatPort")
 //        options.setValue(443, forKey: "chatPort")
+        // 设置IM WEB socket 服务器
+        options.setValue("tke-sdb-im-api-wechat.easemob.com", forKey: "webSocketServer")
+        options.setValue(443, forKey: "webSocketServer")
         // 设置IM Rest服务器
 //        options.setValue("https://[2408:4000:200::c5]", forKey: "restServer")
 //        options.setValue("https://a1.easemob.com", forKey: "restServer")
-        options.setValue("https://a1-hsb.easemob.com", forKey: "restServer")
+//        options.setValue("https://a1-hsb.easemob.com", forKey: "restServer")
+//        options.setValue("https://a1-qa-hsb.easemob.com", forKey: "restServer")
+        options.setValue("https://tke-sdb-a1.easemob.com", forKey: "restServer")
         // 连接TLS的IM长连接服务器，需要设置enableTLSConnection为true；否则，不需要单独设置enableTLSConnection
         //options.setValue(false, forKey: "enableTLSConnection")
 //        options.setValue("https://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/zuoyu/dns/1135220126133718_demo.json", forKey: "dnsURL")
@@ -867,7 +985,7 @@ extension ViewController: EMChatManagerDelegate {
 extension ViewController: UIDocumentPickerDelegate {
     func downloadAttachment() {
         // 获取最后一条消息，假设它是文件消息，下载它的附件。 可以先调用 sendFileMessage 发送一个文件消息
-        let msg = EMClient.shared().chatManager?.getMessageWithMessageId("1464454771413882288")
+        let msg = EMClient.shared().chatManager?.getMessageWithMessageId("1550149085162374696")
         if msg != nil {
             EMClient.shared().chatManager?.downloadMessageAttachment(msg!, progress: { value in
                 print("download progress: \(value)")

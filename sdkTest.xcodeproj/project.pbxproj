@@ -19,9 +19,10 @@
 		C0D706F82B28534400C40D7A /* libboringssl.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C0D706F52B28532600C40D7A /* libboringssl.tbd */; };
 		C0E35E2D2D12D20D00AC90E2 /* HyphenateChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0E35E2C2D12D20D00AC90E2 /* HyphenateChat.framework */; };
 		C0E35E2E2D12D20D00AC90E2 /* HyphenateChat.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C0E35E2C2D12D20D00AC90E2 /* HyphenateChat.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D933C4912F907E650011FAC3 /* VPNChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D933C48F2F907CE30011FAC3 /* VPNChecker.swift */; };
+		D933C4932F9084C40011FAC3 /* MediaFilePickerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D933C4922F9084C40011FAC3 /* MediaFilePickerTest.swift */; };
 		D94BCB722DB11AFC00859299 /* test_remove_group_member.swift in Sources */ = {isa = PBXBuildFile; fileRef = D94BCB712DB11AFC00859299 /* test_remove_group_member.swift */; };
 		D97D29272E80F85000617DDD /* IOSPathResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = D97D29252E80F85000617DDD /* IOSPathResolver.m */; };
-		D97D29282E80F85000617DDD /* MediaFilePickerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D97D29262E80F85000617DDD /* MediaFilePickerTest.swift */; };
 		D9AA01022F31CC51007697B3 /* MainNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AA01012F31CC51007697B3 /* MainNavigationView.swift */; };
 		D9D2174E2F30AFFF005C9F84 /* LZ4CompressionTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D2174D2F30AFFF005C9F84 /* LZ4CompressionTestView.swift */; };
 /* End PBXBuildFile section */
@@ -62,10 +63,11 @@
 		C0D706F52B28532600C40D7A /* libboringssl.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libboringssl.tbd; path = usr/lib/libboringssl.tbd; sourceTree = SDKROOT; };
 		C0D706F62B28533500C40D7A /* libz.1.1.3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.1.3.tbd; path = usr/lib/libz.1.1.3.tbd; sourceTree = SDKROOT; };
 		C0E35E2C2D12D20D00AC90E2 /* HyphenateChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = HyphenateChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D933C48F2F907CE30011FAC3 /* VPNChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNChecker.swift; sourceTree = "<group>"; };
+		D933C4922F9084C40011FAC3 /* MediaFilePickerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaFilePickerTest.swift; sourceTree = "<group>"; };
 		D94BCB712DB11AFC00859299 /* test_remove_group_member.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = test_remove_group_member.swift; sourceTree = "<group>"; };
 		D97D29242E80F85000617DDD /* IOSPathResolver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IOSPathResolver.h; sourceTree = "<group>"; };
 		D97D29252E80F85000617DDD /* IOSPathResolver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IOSPathResolver.m; sourceTree = "<group>"; };
-		D97D29262E80F85000617DDD /* MediaFilePickerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaFilePickerTest.swift; sourceTree = "<group>"; };
 		D97D292C2E80F8E300617DDD /* sdkTest-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "sdkTest-Bridging-Header.h"; sourceTree = "<group>"; };
 		D9AA01012F31CC51007697B3 /* MainNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNavigationView.swift; sourceTree = "<group>"; };
 		D9D2174D2F30AFFF005C9F84 /* LZ4CompressionTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LZ4CompressionTestView.swift; sourceTree = "<group>"; };
@@ -113,14 +115,15 @@
 				C0D706EE2B28507B00C40D7A /* TokenBuilder.mm */,
 				C0D706F02B28510300C40D7A /* 007token */,
 				C0D706D32B2843C400C40D7A /* AppDelegate.swift */,
+				D933C48F2F907CE30011FAC3 /* VPNChecker.swift */,
 				D94BCB712DB11AFC00859299 /* test_remove_group_member.swift */,
 				D9D2174D2F30AFFF005C9F84 /* LZ4CompressionTestView.swift */,
 				D9AA01012F31CC51007697B3 /* MainNavigationView.swift */,
 				C0D706D52B2843C400C40D7A /* SceneDelegate.swift */,
 				C0D706D72B2843C400C40D7A /* ViewController.swift */,
+				D933C4922F9084C40011FAC3 /* MediaFilePickerTest.swift */,
 				D97D29242E80F85000617DDD /* IOSPathResolver.h */,
 				D97D29252E80F85000617DDD /* IOSPathResolver.m */,
-				D97D29262E80F85000617DDD /* MediaFilePickerTest.swift */,
 				C0D706D92B2843C400C40D7A /* Main.storyboard */,
 				C0D706DC2B2843C800C40D7A /* Assets.xcassets */,
 				C0D706DE2B2843C800C40D7A /* LaunchScreen.storyboard */,
@@ -225,10 +228,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D933C4932F9084C40011FAC3 /* MediaFilePickerTest.swift in Sources */,
 				C0D706D82B2843C400C40D7A /* ViewController.swift in Sources */,
 				C0D706EF2B28507B00C40D7A /* TokenBuilder.mm in Sources */,
+				D933C4912F907E650011FAC3 /* VPNChecker.swift in Sources */,
 				D97D29272E80F85000617DDD /* IOSPathResolver.m in Sources */,
-				D97D29282E80F85000617DDD /* MediaFilePickerTest.swift in Sources */,
 				D94BCB722DB11AFC00859299 /* test_remove_group_member.swift in Sources */,
 				C0D706D42B2843C400C40D7A /* AppDelegate.swift in Sources */,
 				D9D2174E2F30AFFF005C9F84 /* LZ4CompressionTestView.swift in Sources */,
@@ -345,7 +349,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -502,7 +506,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -544,7 +548,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

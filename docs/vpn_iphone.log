@@ -1,0 +1,101 @@
+===== Port Dump Begin (Current Process) =====
+No socket fd found in current process.
+===== Port Dump End (Current Process), total sockets: 0 =====
+[ifaddrs #0] name=lo0, family=LINK, addr=, netmask=-, dst=-, flags=0x8049[UP|RUNNING|LOOPBACK|MULTICAST]
+-------------------------------
+[ifaddrs #1] name=lo0, family=IPv4, addr=127.0.0.1, netmask=255.0.0.0, dst=127.0.0.1, flags=0x8049[UP|RUNNING|LOOPBACK|MULTICAST]
+-------------------------------
+[ifaddrs #2] name=lo0, family=IPv6, addr=::1, netmask=ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff, dst=::1, flags=0x8049[UP|RUNNING|LOOPBACK|MULTICAST]
+-------------------------------
+[ifaddrs #3] name=lo0, family=IPv6, addr=fe80::1%lo0, netmask=ffff:ffff:ffff:ffff::, dst=-, flags=0x8049[UP|RUNNING|LOOPBACK|MULTICAST]
+-------------------------------
+[ifaddrs #4] name=XHC0, family=LINK, addr=, netmask=-, dst=-, flags=0x0[NONE]
+-------------------------------
+[ifaddrs #5] name=pdp_ip0, family=LINK, addr=, netmask=-, dst=-, flags=0x8010[POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #6] name=pdp_ip3, family=LINK, addr=, netmask=-, dst=-, flags=0x8010[POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #7] name=pdp_ip2, family=LINK, addr=, netmask=-, dst=-, flags=0x8010[POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #8] name=pdp_ip4, family=LINK, addr=, netmask=-, dst=-, flags=0x8010[POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #9] name=pdp_ip1, family=LINK, addr=, netmask=-, dst=-, flags=0x8010[POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #10] name=pdp_ip5, family=LINK, addr=, netmask=-, dst=-, flags=0x8010[POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #11] name=pdp_ip6, family=LINK, addr=, netmask=-, dst=-, flags=0x8010[POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #12] name=ipsec0, family=LINK, addr=, netmask=-, dst=-, flags=0x8051[UP|RUNNING|POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #13] name=ipsec1, family=LINK, addr=, netmask=-, dst=-, flags=0x8051[UP|RUNNING|POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #14] name=ipsec2, family=LINK, addr=, netmask=-, dst=-, flags=0x8051[UP|RUNNING|POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #15] name=utun0, family=LINK, addr=, netmask=-, dst=-, flags=0x8051[UP|RUNNING|POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #16] name=utun0, family=IPv6, addr=fe80::4132:3d8d:9cde:fec9%utun0, netmask=ffff:ffff:ffff:ffff::, dst=-, flags=0x8051[UP|RUNNING|POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #17] name=anpi0, family=LINK, addr=02:00:00:00:00:00, netmask=-, dst=-, flags=0x8863[UP|RUNNING|BROADCAST|MULTICAST]
+-------------------------------
+[ifaddrs #18] name=anpi0, family=IPv6, addr=fe80::d47f:69ff:fee8:3090%anpi0, netmask=ffff:ffff:ffff:ffff::, dst=-, flags=0x8863[UP|RUNNING|BROADCAST|MULTICAST]
+-------------------------------
+[ifaddrs #19] name=en1, family=LINK, addr=02:00:00:00:00:00, netmask=-, dst=-, flags=0x8863[UP|RUNNING|BROADCAST|MULTICAST]
+-------------------------------
+[ifaddrs #20] name=en2, family=LINK, addr=02:00:00:00:00:00, netmask=-, dst=-, flags=0x8863[UP|RUNNING|BROADCAST|MULTICAST]
+-------------------------------
+[ifaddrs #21] name=en2, family=IPv6, addr=fe80::148b:490b:3dd8:3764%en2, netmask=ffff:ffff:ffff:ffff::, dst=-, flags=0x8863[UP|RUNNING|BROADCAST|MULTICAST]
+-------------------------------
+[ifaddrs #22] name=en2, family=IPv4, addr=169.254.25.207, netmask=255.255.0.0, dst=169.254.255.255, flags=0x8863[UP|RUNNING|BROADCAST|MULTICAST]
+-------------------------------
+[ifaddrs #23] name=ap1, family=LINK, addr=02:00:00:00:00:00, netmask=-, dst=-, flags=0x8822[BROADCAST|MULTICAST]
+-------------------------------
+[ifaddrs #24] name=en0, family=LINK, addr=02:00:00:00:00:00, netmask=-, dst=-, flags=0x8863[UP|RUNNING|BROADCAST|MULTICAST]
+-------------------------------
+[ifaddrs #25] name=en0, family=IPv6, addr=fe80::86a:ff34:50c3:b477%en0, netmask=ffff:ffff:ffff:ffff::, dst=-, flags=0x8863[UP|RUNNING|BROADCAST|MULTICAST]
+-------------------------------
+[ifaddrs #26] name=en0, family=IPv4, addr=10.202.0.65, netmask=255.255.255.0, dst=10.202.0.255, flags=0x8863[UP|RUNNING|BROADCAST|MULTICAST]
+-------------------------------
+[ifaddrs #27] name=utun1, family=LINK, addr=, netmask=-, dst=-, flags=0x8051[UP|RUNNING|POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #28] name=utun1, family=IPv6, addr=fe80::1a51:e188:f46b:66f6%utun1, netmask=ffff:ffff:ffff:ffff::, dst=-, flags=0x8051[UP|RUNNING|POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #29] name=awdl0, family=LINK, addr=02:00:00:00:00:00, netmask=-, dst=-, flags=0x8863[UP|RUNNING|BROADCAST|MULTICAST]
+-------------------------------
+[ifaddrs #30] name=awdl0, family=IPv6, addr=fe80::6ce0:caff:fe04:ef51%awdl0, netmask=ffff:ffff:ffff:ffff::, dst=-, flags=0x8863[UP|RUNNING|BROADCAST|MULTICAST]
+-------------------------------
+[ifaddrs #31] name=llw0, family=LINK, addr=02:00:00:00:00:00, netmask=-, dst=-, flags=0x8863[UP|RUNNING|BROADCAST|MULTICAST]
+-------------------------------
+[ifaddrs #32] name=llw0, family=IPv6, addr=fe80::6ce0:caff:fe04:ef51%llw0, netmask=ffff:ffff:ffff:ffff::, dst=-, flags=0x8863[UP|RUNNING|BROADCAST|MULTICAST]
+-------------------------------
+[ifaddrs #33] name=utun2, family=LINK, addr=, netmask=-, dst=-, flags=0x8051[UP|RUNNING|POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #34] name=utun2, family=IPv6, addr=fe80::5a1a:4bdd:459f:5ad%utun2, netmask=ffff:ffff:ffff:ffff::, dst=-, flags=0x8051[UP|RUNNING|POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #35] name=utun3, family=LINK, addr=, netmask=-, dst=-, flags=0x8051[UP|RUNNING|POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #36] name=utun3, family=IPv6, addr=fe80::ce81:b1c:bd2c:69e%utun3, netmask=ffff:ffff:ffff:ffff::, dst=-, flags=0x8051[UP|RUNNING|POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #37] name=utun4, family=LINK, addr=, netmask=-, dst=-, flags=0x8051[UP|RUNNING|POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #38] name=utun4, family=IPv6, addr=fe80::2879:66f3:b6:8366%utun4, netmask=ffff:ffff:ffff:ffff::, dst=-, flags=0x8051[UP|RUNNING|POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #39] name=utun6, family=LINK, addr=, netmask=-, dst=-, flags=0x8051[UP|RUNNING|POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #40] name=utun6, family=IPv6, addr=fe80::25df:3a89:a06:29af%utun6, netmask=ffff:ffff:ffff:ffff::, dst=-, flags=0x8051[UP|RUNNING|POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #41] name=utun5, family=LINK, addr=, netmask=-, dst=-, flags=0x8051[UP|RUNNING|POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #42] name=utun5, family=IPv6, addr=fe80::80e6:82e9:b1fd:7286%utun5, netmask=ffff:ffff:ffff:ffff::, dst=-, flags=0x8051[UP|RUNNING|POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #43] name=utun5, family=IPv6, addr=fdaf:ad80:df0b::1, netmask=ffff:ffff:ffff:ffff::, dst=-, flags=0x8051[UP|RUNNING|POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #44] name=utun7, family=LINK, addr=, netmask=-, dst=-, flags=0x8051[UP|RUNNING|POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #45] name=utun7, family=IPv4, addr=198.18.0.1, netmask=255.255.255.0, dst=198.18.0.1, flags=0x8051[UP|RUNNING|POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #46] name=utun7, family=IPv6, addr=fe80::80e6:82e9:b1fd:7286%utun7, netmask=ffff:ffff:ffff:ffff::, dst=-, flags=0x8051[UP|RUNNING|POINTOPOINT|MULTICAST]
+-------------------------------
+[ifaddrs #47] name=utun7, family=IPv6, addr=fd00:1234:ffff::10, netmask=ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff, dst=-, flags=0x8051[UP|RUNNING|POINTOPOINT|MULTICAST]
+-------------------------------
+系统当前未使用 VPN
+didRegisterForRemoteNotificationsWithDeviceToken

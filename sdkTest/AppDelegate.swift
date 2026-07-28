@@ -8,6 +8,7 @@
 import UIKit
 import UserNotifications
 import HyphenateChat
+//import VPNChecker
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
@@ -27,6 +28,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 
             }
         }
+        
+        // let vpnStatus = VPNChecker.isVPNConnected()
+        // if vpnStatus {
+        //     print("系统当前正在使用 VPN")
+        // } else {
+        //     print("系统当前未使用 VPN")
+        // }
         
         
         return true
