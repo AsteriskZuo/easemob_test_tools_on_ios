@@ -23,6 +23,7 @@ enum NavigationDestination {
     case viewController
     case lz4CompressionTest
     case mediaFilePicker
+    case sendImageMessage
 }
 
 // MARK: - Main Navigation View
@@ -51,6 +52,13 @@ struct MainNavigationView: View {
             icon: "photo.on.rectangle.angled",
             color: .green,
             destination: .mediaFilePicker
+        ),
+        NavigationItem(
+            title: "发送图片消息",
+            subtitle: "初始化、登录、发送图片消息、退出登录",
+            icon: "photo.badge.arrow.down.fill",
+            color: .purple,
+            destination: .sendImageMessage
         )
     ]
     
@@ -122,6 +130,13 @@ struct MainNavigationView: View {
             let mediaPickerView = MediaFilePickerTest()
             let hostingController = UIHostingController(rootView: mediaPickerView)
             hostingController.title = "媒体文件选择"
+            hostingController.edgesForExtendedLayout = []
+            viewController = hostingController
+            
+        case .sendImageMessage:
+            let sendImageView = SendImageMessageTest()
+            let hostingController = UIHostingController(rootView: sendImageView)
+            hostingController.title = "发送图片消息"
             hostingController.edgesForExtendedLayout = []
             viewController = hostingController
         }

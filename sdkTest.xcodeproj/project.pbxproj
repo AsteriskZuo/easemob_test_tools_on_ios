@@ -25,6 +25,7 @@
 		D97D29272E80F85000617DDD /* IOSPathResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = D97D29252E80F85000617DDD /* IOSPathResolver.m */; };
 		D9AA01022F31CC51007697B3 /* MainNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AA01012F31CC51007697B3 /* MainNavigationView.swift */; };
 		D9D2174E2F30AFFF005C9F84 /* LZ4CompressionTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D2174D2F30AFFF005C9F84 /* LZ4CompressionTestView.swift */; };
+		D9E501022FB28A3C00000001 /* SendImageMessageTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E501012FB28A3C00000001 /* SendImageMessageTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -71,6 +72,7 @@
 		D97D292C2E80F8E300617DDD /* sdkTest-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "sdkTest-Bridging-Header.h"; sourceTree = "<group>"; };
 		D9AA01012F31CC51007697B3 /* MainNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNavigationView.swift; sourceTree = "<group>"; };
 		D9D2174D2F30AFFF005C9F84 /* LZ4CompressionTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LZ4CompressionTestView.swift; sourceTree = "<group>"; };
+		D9E501012FB28A3C00000001 /* SendImageMessageTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendImageMessageTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +124,7 @@
 				C0D706D52B2843C400C40D7A /* SceneDelegate.swift */,
 				C0D706D72B2843C400C40D7A /* ViewController.swift */,
 				D933C4922F9084C40011FAC3 /* MediaFilePickerTest.swift */,
+				D9E501012FB28A3C00000001 /* SendImageMessageTest.swift */,
 				D97D29242E80F85000617DDD /* IOSPathResolver.h */,
 				D97D29252E80F85000617DDD /* IOSPathResolver.m */,
 				C0D706D92B2843C400C40D7A /* Main.storyboard */,
@@ -237,6 +240,7 @@
 				C0D706D42B2843C400C40D7A /* AppDelegate.swift in Sources */,
 				D9D2174E2F30AFFF005C9F84 /* LZ4CompressionTestView.swift in Sources */,
 				D9AA01022F31CC51007697B3 /* MainNavigationView.swift in Sources */,
+				D9E501022FB28A3C00000001 /* SendImageMessageTest.swift in Sources */,
 				C0D706D62B2843C400C40D7A /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
