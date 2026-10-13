@@ -209,3 +209,5 @@ $RECYCLE.BIN/
 **/xcshareddata/WorkspaceSettings.xcsettings
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,xcode,objective-c,swift
+
+config.json
