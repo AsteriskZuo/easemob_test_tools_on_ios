@@ -24,6 +24,8 @@ enum NavigationDestination {
     case lz4CompressionTest
     case mediaFilePicker
     case sendImageMessage
+    case userToken
+    case groupMultiDeviceEvent
 }
 
 // MARK: - Main Navigation View
@@ -59,6 +61,20 @@ struct MainNavigationView: View {
             icon: "photo.badge.arrow.down.fill",
             color: .purple,
             destination: .sendImageMessage
+        ),
+        NavigationItem(
+            title: "用户 Token",
+            subtitle: "通过 Bearer Token 获取用户登录 Token",
+            icon: "key.fill",
+            color: .teal,
+            destination: .userToken
+        ),
+        NavigationItem(
+            title: "群组多设备事件",
+            subtitle: "验证白名单与全员禁言事件 30/31/32/33",
+            icon: "rectangle.on.rectangle.angled",
+            color: .indigo,
+            destination: .groupMultiDeviceEvent
         )
     ]
     
@@ -137,6 +153,20 @@ struct MainNavigationView: View {
             let sendImageView = SendImageMessageTest()
             let hostingController = UIHostingController(rootView: sendImageView)
             hostingController.title = "发送图片消息"
+            hostingController.edgesForExtendedLayout = []
+            viewController = hostingController
+
+        case .userToken:
+            let tokenView = EasemobUserTokenView()
+            let hostingController = UIHostingController(rootView: tokenView)
+            hostingController.title = "用户 Token"
+            hostingController.edgesForExtendedLayout = []
+            viewController = hostingController
+
+        case .groupMultiDeviceEvent:
+            let testView = GroupMultiDeviceEventTest()
+            let hostingController = UIHostingController(rootView: testView)
+            hostingController.title = "群组多设备事件"
             hostingController.edgesForExtendedLayout = []
             viewController = hostingController
         }

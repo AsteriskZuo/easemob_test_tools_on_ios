@@ -8,6 +8,8 @@
 | LZ4 压缩测试 | `LZ4CompressionTestView.swift` | LZ4 压缩日志收集与统计 |
 | 媒体文件选择 | `MediaFilePickerTest.swift` | 测试相册和文件管理器路径获取 |
 | 发送图片消息 | `SendImageMessageTest.swift` | 初始化、登录、发送图片消息、退出登录的独立链路测试 |
+| 用户 Token | `EasemobUserTokenView.swift` | 通过 Bearer Token 获取用户登录 Token |
+| 群组多设备事件 | `GroupMultiDeviceEventTest.swift` | 验证 HIM-23838 的群组多设备事件 30/31/32/33 |
 
 ## SDK 测试
 
@@ -101,6 +103,74 @@ JSON 文件（文件夹内所有非隐藏文件都会按行读取），每行一
 - 接口调用参考 `ViewController.swift`：`EMOptions` 初始化（关闭自动登录）、`login(withUsername:password:)`（如需 token 登录可改为 `login(withUsername:token:)`）、`logout(false:)`
 - 图片选择参考 `MediaFilePickerTest.swift`：iOS 16+ 使用 `PhotosPicker`，低版本回退 `UIImagePickerController`；选中后保存到临时目录，用 `EMImageMessageBody(localPath:)` 构造图片消息发送
 - 界面显示初始化/登录状态和实时日志（含上传进度、发送结果 messageId），按钮按链路顺序（1→4）依次置灰/可用
+
+## 用户 Token
+
+首页的「用户 Token」是独立页面，支持输入 Base URL、AppKey、用户名、密码和 Bearer Token，并复制接口返回的用户 Token。Token 能力分为两层：
+
+- `EasemobUserTokenService` 是无 UI 的 HTTP 工具，业务代码可以直接调用。
+- `EasemobUserTokenForm` 是可嵌入其他 `Form` 的页面组件，状态由 `EasemobUserTokenViewModel` 管理。其他页面可以共享该 ViewModel，并直接使用其中的 `accessToken` 登录。
+
+无 UI 调用示例：
+
+```swift
+let request = EasemobUserTokenRequest(
+    baseURL: "https://ngi-a1.easemob.com",
+    appKey: "org#app",
+    username: "user1",
+    password: "password",
+    bearerToken: "app bearer token"
+)
+let token = try await EasemobUserTokenService.shared.fetchToken(request).accessToken
+```
+
+页面组件调用示例：
+
+```swift
+@StateObject private var tokenViewModel = EasemobUserTokenViewModel()
+
+var body: some View {
+    Form {
+        EasemobUserTokenForm(viewModel: tokenViewModel) { token in
+            // 使用 token 登录
+        }
+    }
+}
+
+func login() {
+    Task {
+        // 已手动填写 accessToken 时直接返回，否则自动发起 HTTP 请求。
+        let token = try await tokenViewModel.resolveAccessToken()
+        // 将 token 交给 SDK 登录。
+    }
+}
+```
+
+密码、Bearer Token 和用户 Token 只保存在当前页面内存中，不会写入日志或持久化。
+
+## 群组多设备事件
+
+使用同一账号在两台 iOS 设备登录。设备 1 负责执行群操作，设备 2 负责监听同账号的多设备事件；用户 2 是被加入和移出白名单的群成员。
+
+### 前置条件
+
+- 在两台真机或两个模拟器安装同一测试 App，并确保使用包含 HIM-23838 修复的 `HyphenateChat.framework`。
+- 准备两个已存在的用户：用户 1 用于两台设备同时登录，用户 2 作为群成员和白名单操作目标。
+- 两台设备都打开首页的「群组多设备事件」。
+
+群组多设备事件页面直接复用 `EasemobUserTokenForm`。可以在「用户 Token（可手动粘贴）」中填入已有 Token，也可以先点击「获取用户 Token」；如果 Token 为空，点击「登录」时会自动通过同一个 ViewModel 请求 Token。密码、Bearer Token 和用户 Token 只保存在当前页面内存中，不会写入日志或持久化。
+
+### 操作步骤
+
+1. 在设备 1 选择「操作端」，填写 Base URL、AppKey、用户 1、密码、Bearer Token 和用户 2；依次点击「初始化」和「登录」。
+2. 在设备 2 选择「观察端」，填写相同配置和同一个用户 1；依次点击「初始化」和「登录」。确认两台设备的 SDK、登录和连接状态均为绿色。也可以提前获取用户 1 的 Token，并在两台设备的「用户 Token（可选）」中粘贴同一个 Token。
+3. 在设备 1 点击「创建测试群」。创建成功后，复制页面群 ID 输入框中的群 ID。
+4. 在设备 2 的群 ID 输入框粘贴该群 ID，然后点击「观察 30/31/32/33」。此时观察端开始等待事件 30，单个事件的超时时间为 35 秒。
+5. 立即回到设备 1，点击「运行 30/31/32/33」。操作端会自动依次执行添加白名单、移除白名单、全员禁言和解除全员禁言，并在每一步后从服务端回读状态。
+6. 等待两台设备完成。设备 1 应显示 `Operator PASS`；设备 2 应显示 `Observer PASS`，并依次记录事件 30、31、32、33。
+7. 在设备 1 点击「销毁测试群」，确认成功后两台设备分别退出登录。
+
+不要在设备 2 开始观察之前运行设备 1 的操作。观察端会校验群 ID、事件顺序、35 秒超时，以及事件 30/31 中的用户 2；任一条件不满足都会显示 `FAIL`。
 
 ## 其他源文件
 

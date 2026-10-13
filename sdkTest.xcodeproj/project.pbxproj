@@ -26,6 +26,9 @@
 		D9AA01022F31CC51007697B3 /* MainNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AA01012F31CC51007697B3 /* MainNavigationView.swift */; };
 		D9D2174E2F30AFFF005C9F84 /* LZ4CompressionTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D2174D2F30AFFF005C9F84 /* LZ4CompressionTestView.swift */; };
 		D9E501022FB28A3C00000001 /* SendImageMessageTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E501012FB28A3C00000001 /* SendImageMessageTest.swift */; };
+		D9E501042FB28A3C00000002 /* GroupMultiDeviceEventTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E501032FB28A3C00000002 /* GroupMultiDeviceEventTest.swift */; };
+		D9E501062FB28A3C00000003 /* EasemobUserTokenService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E501052FB28A3C00000003 /* EasemobUserTokenService.swift */; };
+		D9E501082FB28A3C00000004 /* EasemobUserTokenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E501072FB28A3C00000004 /* EasemobUserTokenView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -73,6 +76,9 @@
 		D9AA01012F31CC51007697B3 /* MainNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNavigationView.swift; sourceTree = "<group>"; };
 		D9D2174D2F30AFFF005C9F84 /* LZ4CompressionTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LZ4CompressionTestView.swift; sourceTree = "<group>"; };
 		D9E501012FB28A3C00000001 /* SendImageMessageTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendImageMessageTest.swift; sourceTree = "<group>"; };
+		D9E501032FB28A3C00000002 /* GroupMultiDeviceEventTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupMultiDeviceEventTest.swift; sourceTree = "<group>"; };
+		D9E501052FB28A3C00000003 /* EasemobUserTokenService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasemobUserTokenService.swift; sourceTree = "<group>"; };
+		D9E501072FB28A3C00000004 /* EasemobUserTokenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasemobUserTokenView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +131,9 @@
 				C0D706D72B2843C400C40D7A /* ViewController.swift */,
 				D933C4922F9084C40011FAC3 /* MediaFilePickerTest.swift */,
 				D9E501012FB28A3C00000001 /* SendImageMessageTest.swift */,
+				D9E501032FB28A3C00000002 /* GroupMultiDeviceEventTest.swift */,
+				D9E501052FB28A3C00000003 /* EasemobUserTokenService.swift */,
+				D9E501072FB28A3C00000004 /* EasemobUserTokenView.swift */,
 				D97D29242E80F85000617DDD /* IOSPathResolver.h */,
 				D97D29252E80F85000617DDD /* IOSPathResolver.m */,
 				C0D706D92B2843C400C40D7A /* Main.storyboard */,
@@ -241,6 +250,9 @@
 				D9D2174E2F30AFFF005C9F84 /* LZ4CompressionTestView.swift in Sources */,
 				D9AA01022F31CC51007697B3 /* MainNavigationView.swift in Sources */,
 				D9E501022FB28A3C00000001 /* SendImageMessageTest.swift in Sources */,
+				D9E501042FB28A3C00000002 /* GroupMultiDeviceEventTest.swift in Sources */,
+				D9E501062FB28A3C00000003 /* EasemobUserTokenService.swift in Sources */,
+				D9E501082FB28A3C00000004 /* EasemobUserTokenView.swift in Sources */,
 				C0D706D62B2843C400C40D7A /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
