@@ -15,8 +15,9 @@ import HyphenateChat
 private let kAppKey = "easemob-demo#zuoyu"
 /// 登录用户名
 private let kLoginUsername = "zuoyu01"
-/// 登录密码（如使用 token 登录，改为 login(withUsername:token:) 即可，参考 ViewController.swift 的 loginWithPwd）
-private let kLoginPassword = "1"
+/// 5.0 移除了密码登录，改用 TokenBuilder 现场生成 token（appId/cert 与 ViewController.loginWith007Token() 一致）
+private let kAppId = "3f7718b6a2eb45e5b3bc82ee6fee3504"
+private let kTokenCert = "02d09b6c08fb4988a789465ac48a66c9"
 /// 图片消息接收方（单聊会话 ID）
 private let kReceiverId = "zuoyu02"
 
@@ -166,7 +167,7 @@ struct SendImageMessageTest: View {
         
         let options = EMOptions(appkey: kAppKey)
         options.enableConsoleLog = true
-        options.isAutoLogin = false
+        // 5.0 移除 EMOptions.isAutoLogin：自动登录不再可关，token 过期用 EMClient.renewToken(_:)
         options.usingHttpsOnly = false
         
         EMClient.shared().initializeSDK(with: options)
@@ -176,18 +177,19 @@ struct SendImageMessageTest: View {
     }
     
     private func login() {
-        guard !kLoginPassword.isEmpty else {
-            log("请先在 SendImageMessageTest.swift 中填写 kLoginPassword")
+        guard !kAppId.isEmpty, !kTokenCert.isEmpty else {
+            log("请先在 SendImageMessageTest.swift 中填写 kAppId 和 kTokenCert")
             return
         }
+        let token = TokenBuilder.buildToken(withAppId: kAppId, cert: kTokenCert, userId: kLoginUsername, expiredTime: 3600)
         log("登录中: \(kLoginUsername) ...")
-        EMClient.shared().login(withUsername: kLoginUsername, password: kLoginPassword) { username, error in
+        EMClient.shared().login(withUsername: kLoginUsername, token: token) { username, error in
             DispatchQueue.main.async {
                 if let error = error {
                     self.log("登录失败: \(error.errorDescription ?? "") (code: \(error.code.rawValue))")
                 } else {
                     self.isLoggedIn = true
-                    self.log("登录成功: \(username ?? kLoginUsername)")
+                    self.log("登录成功: \(username)")
                 }
             }
         }

@@ -266,9 +266,12 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     func testHttpGet() {
-        EMClient.shared().contactManager?.getContactsFromServer(completion: { list, error in
-            self.printLog("error \(String(describing: error?.description))")
-        })
+        // 5.0 移除 EMContactManager.getContactsFromServer(completion:)：联系人由 SDK 自动同步，只能读本地缓存
+        if let contacts = EMClient.shared().contactManager?.getAllContacts() {
+            self.printLog("contacts count: \(contacts.count)")
+        } else {
+            self.printLog("error: contactManager is nil")
+        }
     }
     
     func generateData() {
@@ -285,7 +288,8 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
                 EMClient.shared().chatManager?.import(messages)
                 let latestReceiveMsg = EMChatMessage(conversationID: conversationId,from: conversationId,to: EMClient.shared().currentUsername ?? "", body: EMTextMessageBody(text: "latestReceive"), ext: ["nickName": "蓝色天空", "avatar": "https://downloadsdk.easemob.com/downloads/IMDemo/liveLogo.png", "role": 1, "country": "China"])
                 latestReceiveMsg.direction = .receive
-                latestReceiveMsg.isRead = false
+                // 5.0 里 EMChatMessage.isRead 只读；插入的消息默认未读，
+                // 由 EMOptions.regardImportMessagesAsRead 控制（默认 NO＝未读）
                 conversation.append(latestReceiveMsg, error: nil)
                 let latestMsg = EMChatMessage(conversationID: conversationId, body: EMTextMessageBody(text: "latestSend"), ext: nil)
                 conversation.append(latestMsg, error: nil)
@@ -301,7 +305,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
         if let msg = EMClient.shared().chatManager?.getMessageWithMessageId("1384637766834325460") {
             let body = msg.body as! EMVideoMessageBody
             print("image msg.localPath:\(body.localPath ?? ""),thumbnailLocalPath:\(body.thumbnailLocalPath ?? "")")
-            EMClient.shared().chatManager?.modifyMessage("1384637766834325460", body: EMVideoMessageBody(localPath: "dafasdf", displayName: "dddd"), completion: { e, msg in
+            EMClient.shared().chatManager?.modifyMessage("1384637766834325460", body: EMVideoMessageBody(localPath: "dafasdf", displayName: "dddd"), ext: nil, completion: { e, msg in
                 
             })
         }
@@ -387,14 +391,14 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
             for i in startIndex...startIndex+pageCount-1 {
                 let conversationId = "du00\(i)"
                 if let conversation = EMClient.shared().chatManager?.getConversation(conversationId, type: .chat, createIfNotExist: true) {
-                    // 先设置所有消息已读
-                    var err: EMError? = nil
-                    conversation.markAllMessages(asRead: &err)
+                    // 先清空该会话未读数
+                    // 5.0 移除 EMConversation.markAllMessagesAsRead:，改用 ChatManager 的异步接口
+                    EMClient.shared().chatManager?.clearConversationUnreadMessageCount(conversationId, completion: nil)
                     
                     // 然后插入消息
                     let body = EMTextMessageBody(text: "hello")
                     let msg = EMChatMessage(conversationID: conversationId,from: conversationId,to: EMClient.shared().currentUsername ?? "", body: body, ext: ["nickName": "蓝色天空", "avatar": "https://downloadsdk.easemob.com/downloads/IMDemo/liveLogo.png", "role": 1, "country": "China"])
-                    msg.isRead = false
+                    // 5.0 里 EMChatMessage.isRead 只读，插入的消息默认未读
                     msg.direction = .receive
                     conversation.insert(msg, error: nil)
                     
@@ -681,10 +685,10 @@ extension ViewController {
          let options = EMOptions(appkey: Appkey)
         //options.autoLoadAllConversations = false
         options.enableConsoleLog = true
-        options.enableRequireReadAck = true
+        // 5.0 移除 EMOptions.enableRequireReadAck：已读回执改为发送前按条设置 EMChatMessage.isNeedReadReceipt
         options.loadEmptyConversations = true
         //options.autoLoadConversations = true
-        options.isAutoLogin = false
+        // 5.0 移除 EMOptions.isAutoLogin：自动登录不再可关，token 过期用 EMClient.renewToken(_:)
         options.enableDeliveryAck = true
 //        options.ntpServers = ["ntp1.aliyun.com:123", "time1.google.com:123"]
         //options.enableCrashReport = true
@@ -1081,7 +1085,10 @@ extension ViewController: UIImagePickerControllerDelegate
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let image = info[.originalImage] as? UIImage,
            let data = image.jpegData(compressionQuality: 1.0) {
-            let imageData = EMImageMessageBody(data: data, displayName: "IMG_8791.jpg")
+            // 5.0 移除 EMImageMessageBody(data:displayName:)，只接受本地路径：先把 jpeg 数据落盘
+            let localPath = (NSTemporaryDirectory() as NSString).appendingPathComponent("IMG_8791.jpg")
+            try? data.write(to: URL(fileURLWithPath: localPath))
+            let imageData = EMImageMessageBody(localPath: localPath, displayName: "IMG_8791.jpg")
             let msg = EMChatMessage(conversationID: "du001", body: imageData, ext: nil)
             EMClient.shared().chatManager?.send(msg, progress: nil) {
                 [weak self] msg, err in

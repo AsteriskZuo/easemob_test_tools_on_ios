@@ -427,7 +427,8 @@ class LZ4CompressionTestViewModel: ObservableObject {
     // MARK: - Account Settings
     @Published var appKey: String = "easemob-demo#testngi01"
     @Published var username: String = "tst"
-    @Published var password: String = "1"
+    /// 5.0 移除了密码登录，这里填 token（生成方式参考 ViewController.loginWith007Token()）
+    @Published var token: String = ""
     @Published var isLoggedIn: Bool = false
     @Published var loginStatus: String = "未登录"
     
@@ -477,7 +478,7 @@ class LZ4CompressionTestViewModel: ObservableObject {
         
         let options = EMOptions(appkey: appKey)
         options.enableConsoleLog = true
-        options.isAutoLogin = false
+        // 5.0 移除 EMOptions.isAutoLogin：自动登录不再可关，token 过期用 EMClient.renewToken(_:)
         
         // 初始化 SDK
         EMClient.shared().initializeSDK(with: options)
@@ -503,15 +504,15 @@ class LZ4CompressionTestViewModel: ObservableObject {
         appendLog("正在登录...")
         loginStatus = "登录中..."
         
-        EMClient.shared().login(withUsername: username, password: password) { [weak self] (aUsername, aError) in
+        EMClient.shared().login(withUsername: username, token: token) { [weak self] (aUsername, aError) in
             DispatchQueue.main.async {
                 if let error = aError {
                     self?.loginStatus = "登录失败: \(error.errorDescription ?? "")"
                     self?.appendLog("登录失败: \(error.errorDescription ?? "")")
                     self?.isLoggedIn = false
                 } else {
-                    self?.loginStatus = "已登录: \(aUsername ?? "")"
-                    self?.appendLog("登录成功: \(aUsername ?? "")")
+                    self?.loginStatus = "已登录: \(aUsername)"
+                    self?.appendLog("登录成功: \(aUsername)")
                     self?.isLoggedIn = true
                 }
             }
@@ -805,10 +806,11 @@ struct LZ4CompressionTestView: View {
             }
             
             HStack {
-                Text("密码:")
+                Text("Token:")
                     .frame(width: 80, alignment: .leading)
-                SecureField("密码", text: $viewModel.password)
+                TextField("Token", text: $viewModel.token)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .textInputAutocapitalization(.never)
             }
             
             HStack {
