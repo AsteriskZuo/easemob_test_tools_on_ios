@@ -26,6 +26,8 @@ enum NavigationDestination {
     case sendImageMessage
     case userToken
     case groupMultiDeviceEvent
+    case multiBodiesMessage
+    case sdkLogin
 }
 
 // MARK: - Main Navigation View
@@ -34,6 +36,13 @@ struct MainNavigationView: View {
     @State private var selectedDestination: NavigationDestination?
     
     private let navigationItems: [NavigationItem] = [
+        NavigationItem(
+            title: "登录与初始化",
+            subtitle: "可选初始化参数与共享登录状态",
+            icon: "person.crop.circle.badge.checkmark",
+            color: .blue,
+            destination: .sdkLogin
+        ),
         NavigationItem(
             title: "SDK 测试",
             subtitle: "原始 ViewController - 登录、发消息等",
@@ -75,7 +84,14 @@ struct MainNavigationView: View {
             icon: "rectangle.on.rectangle.angled",
             color: .indigo,
             destination: .groupMultiDeviceEvent
-        )
+        ),
+        NavigationItem(
+            title: "多 bodies 消息",
+            subtitle: "自由组合文本、图片和文件，验证收发与附件回调",
+            icon: "square.stack.3d.up.fill",
+            color: .cyan,
+            destination: .multiBodiesMessage
+        ),
     ]
     
     var body: some View {
@@ -126,6 +142,18 @@ struct MainNavigationView: View {
         let viewController: UIViewController
         
         switch destination {
+        case .sdkLogin:
+            let hostingController = UIHostingController(rootView: SDKLoginView())
+            hostingController.title = "登录与初始化"
+            hostingController.edgesForExtendedLayout = []
+            viewController = hostingController
+
+        case .multiBodiesMessage:
+            let hostingController = UIHostingController(rootView: MultiBodiesMessageTest())
+            hostingController.title = "多 bodies 消息"
+            hostingController.edgesForExtendedLayout = []
+            viewController = hostingController
+
         case .viewController:
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             if let vc = storyboard.instantiateInitialViewController() as? ViewController {

@@ -4,12 +4,43 @@
 
 | 模块 | 源文件 | 说明 |
 | --- | --- | --- |
+| 登录与初始化 | `SDKLoginView.swift` | 可选初始化参数、Token 登录及供新页面复用的共享状态 |
+| 多 bodies 消息 | `MultiBodiesMessageTest.swift` | 自由组合文本、图片、文件，验证收发、下载回调和本地读写 |
 | SDK 测试 | `ViewController.swift` | 原始 UIKit 界面：初始化、登录、收发消息等 |
 | LZ4 压缩测试 | `LZ4CompressionTestView.swift` | LZ4 压缩日志收集与统计 |
 | 媒体文件选择 | `MediaFilePickerTest.swift` | 测试相册和文件管理器路径获取 |
 | 发送图片消息 | `SendImageMessageTest.swift` | 初始化、登录、发送图片消息、退出登录的独立链路测试 |
 | 用户 Token | `EasemobUserTokenView.swift` | 通过 Bearer Token 获取用户登录 Token |
 | 群组多设备事件 | `GroupMultiDeviceEventTest.swift` | 验证 HIM-23838 的群组多设备事件 30/31/32/33 |
+
+## 登录与初始化、多 bodies 消息
+
+这两个新页面共享 `SDKLoginState.shared`。登录及初始化只在「登录与初始化」页面操作；原有测试页面未改造。Token 获取复用 `EasemobUserTokenForm`，也可以直接粘贴用户 Token。
+
+1. 首页进入「登录与初始化」，填写 AppKey、用户名及 Token。可选初始化参数包含控制台日志、HTTPS、自动传输附件、自动下载缩略图/语音、自动加载会话。各项初始均为「默认」，只对明确选为启用/禁用的项目覆盖 `EMOptions`。首次初始化后修改配置需重启 App。
+2. 初始化、登录后进入「多 bodies 消息」。也可以从测试页打开登录页，登录后点「返回测试」。新页面自动读取共享状态。
+3. 填写目标 ID，选择单聊、群聊或聊天室。群聊/聊天室使用已加入的目标。
+4. 文本可逐段添加；照片、图片文件及普通文件均可多选，也可每行粘贴一个设备可访问的路径。文件选择沿用系统 `fileImporter`，照片沿用 `PhotosPicker`；导入后才发送，不自动拆成多条消息。外部文件在安全访问期间复制到 App 的 `Documents/MultiBodiesImports/`，大文件通过文件复制导入，不整块读入内存。
+5. 在列表中查看 body 下标、内容、路径及字节数，可删除或上下移动。一个条目是单 body，多个条目是一条复合消息；发送顺序以列表为准。单 body 可切换旧/新发送 API，多 body 使用新 API。界面不硬编码 50 的限制，以 SDK 当前 dnsconfig 为准。
+6. 日志显示发送结果与原始 bodyIndex 上传进度；接收列表显示完整 bodies。选中消息后可按整条消息或指定 body 下载原附件、缩略图、大图，查看逐 body 结果与最终请求结果。
+7. 使用「保存当前消息」「从本地读取」检查数量、顺序及状态。最近消息 ID 会保存，重启后登录同一账号再按该 ID 读取；密码和 Token 不持久化。
+
+双设备验证：两台设备使用同一 AppKey、不同账号登录。接收端停留在「登录与初始化」即可；发送端进入「多 bodies 消息」，目标填写接收端账号。接收端的「登录与接收日志」会记录消息 ID、收发方、会话类型、body 数量及按原始下标排列的文本或附件信息，并记录附件自动下载状态变化。共享接收监听不随页面退出而移除；需要手动下载时，再进入「多 bodies 消息」按日志中的消息 ID 从本地读取。
+
+两个新页面的日志区固定为 240 点高，区域内滚动。页面日志同时输出到 Xcode 控制台，前缀分别为 `[SDKDemo]`（登录、接收及附件状态）和 `[MultiBodies]`（测试页操作及进度）；不依赖 SDK 的「控制台日志」开关，该开关仍只控制 SDK 自身日志。
+
+建议先测：一段文本、一个文件（旧 API 和新 API）、两段不同文本、两张不同图片、多个文件、文本+图片+文件、调整顺序后发送。附件大小覆盖小于 2MB、超过 2MB 但未到实际分片阈值、超过分片阈值三档，结合 SDK 日志确认实际路径。服务端下发 `multi-bodies.max_count=20` 时比较 20/21 个 bodies；无有效下发时比较默认 50/51。
+
+编译设备 Debug 产物（不签名；运行时使用本机 Xcode 的开发签名）：
+
+```sh
+xcodebuild -workspace sdkTest.xcworkspace -scheme sdkTest \
+  -configuration Debug -sdk iphoneos -destination 'generic/platform=iOS' \
+  BUILD_DIR="$PWD/build" BUILD_ROOT="$PWD/build" ARCHS=arm64 VALID_ARCHS=arm64 \
+  SWIFT_PRECOMPILE_BRIDGING_HEADER=NO ENABLE_BITCODE=NO CODE_SIGNING_ALLOWED=NO build
+```
+
+workspace 直接引用兄弟目录的 Core/iOS SDK 工程。demo 需要 SDK 的 `EMBridgeHeader.swift`（原页面使用 `swiftBody`），不要套用排除该文件的 SDK 单独构建参数。本轮仅编译，实际收发和服务器配置下发由用户手动验证。
 
 ## SDK 测试
 
