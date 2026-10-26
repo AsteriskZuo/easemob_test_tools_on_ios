@@ -220,6 +220,7 @@ func login() {
 | `ChatManager.getAllConversations` | `-[EMChatManager getAllConversations]` | 本地数据库全部会话 |
 | `ContactManager.getAllContacts` | `-[EMContactManager getAllContacts]` | 本地全部联系人（userId/remark/addTimestamp） |
 | `GroupManager.getJoinedGroups` | `-[EMGroupManager getJoinedGroups]` | 本地缓存的已加入群组 |
+| `ChatManager.fetchMessagesFromServer` | `-[EMChatManager fetchMessagesFromServerBy:conversationType:cursor:pageSize:option:completion:]` | 分页拉取服务器历史消息（其他端常叫 asyncFetchHistoryMessages），返回 `{"cursor", "list"}` |
 
 新增 API 时在 `apiRegistry` 数组追加一条 `ApiEntry` 即可；返回值若是 SDK 模型，需在 `toJsonSafe` 中补充对应的 JSON 转换。注意 iOS 与 Flutter 的枚举值不一致（如消息 body 类型 iOS 从 1 开始、Flutter 从 0 开始），编写跨端脚本时以各端说明为准。
 

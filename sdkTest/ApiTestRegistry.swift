@@ -215,4 +215,70 @@ let apiRegistry: [ApiEntry] = [
             return manager.getJoinedGroups() ?? []
         }
     ),
+    ApiEntry(
+        name: "ChatManager.fetchMessagesFromServer",
+        group: "ChatManager",
+        detail: """
+        从服务器分页拉取指定会话的历史消息（对应 EMChatManager 的 fetchMessagesFromServerBy:conversationType:cursor:pageSize:option:completion:，其他端常叫 asyncFetchHistoryMessages）。
+        conversationType：0 单聊 / 1 群聊 / 2 聊天室；conversationId 单聊填对端用户 ID，群聊/聊天室填群 ID/聊天室 ID。cursor 传空字符串从最新开始；pageSize 取值 [1,50]。
+        option 可整体省略；fromIds 按发送方过滤（仅群聊）；msgTypes 为消息类型数组（1 文本/2 图片/3 视频/4 位置/5 语音/6 文件/7 指令/8 自定义）；startTime/endTime 为毫秒时间戳（-1 表示忽略）；direction：0 倒序 / 1 正序；isSave 控制拉取结果是否写入本地数据库（默认 false）。
+        返回 data 为 {"cursor": "...", "list": [消息 JSON...]}；返回条数小于 pageSize 说明服务器没有更多历史消息。
+        """,
+        paramsTemplate: """
+        {
+          "conversationId": "targetId",
+          "conversationType": 0,
+          "cursor": "",
+          "pageSize": 20,
+          "option": {
+            "direction": 0,
+            "isSave": false
+          }
+        }
+        """,
+        invoke: { params in
+            let conversationId = try requiredString(params, "conversationId")
+            let typeRaw = params["conversationType"] as? Int ?? 0
+            guard let conversationType = EMConversationType(rawValue: typeRaw) else {
+                throw ApiInvokeError(code: -1, message: "conversationType 只支持 0/1/2")
+            }
+            let cursor = params["cursor"] as? String ?? ""
+            let pageSize = UInt(params["pageSize"] as? Int ?? 20)
+            var fetchOption: EMFetchServerMessagesOption?
+            if let optionParams = params["option"] as? [String: Any] {
+                let option = EMFetchServerMessagesOption()
+                if let fromIds = optionParams["fromIds"] as? [String] { option.fromIds = fromIds }
+                if let msgTypes = optionParams["msgTypes"] as? [Int] {
+                    option.msgTypes = msgTypes.map { NSNumber(value: $0) }
+                }
+                if let startTime = optionParams["startTime"] as? Int { option.startTime = startTime }
+                if let endTime = optionParams["endTime"] as? Int { option.endTime = endTime }
+                if let direction = optionParams["direction"] as? Int,
+                   let value = EMMessageSearchDirection(rawValue: direction) {
+                    option.direction = value
+                }
+                if let isSave = optionParams["isSave"] as? Bool { option.isSave = isSave }
+                fetchOption = option
+            }
+            let manager: IEMChatManager = try requireManager(EMClient.shared().chatManager)
+            return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<[String: Any], Error>) in
+                manager.fetchMessagesFromServer(by: conversationId,
+                                                conversationType: conversationType,
+                                                cursor: cursor,
+                                                pageSize: pageSize,
+                                                option: fetchOption) { result, error in
+                    if let error {
+                        continuation.resume(throwing: error.apiError)
+                    } else if let result {
+                        continuation.resume(returning: [
+                            "cursor": result.cursor ?? "",
+                            "list": (result.list ?? []).map { toJsonSafe($0) ?? NSNull() },
+                        ])
+                    } else {
+                        continuation.resume(throwing: ApiInvokeError(code: -1, message: "fetchMessagesFromServer 回调中 result 与 error 均为空"))
+                    }
+                }
+            }
+        }
+    ),
 ]
