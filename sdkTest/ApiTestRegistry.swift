@@ -73,12 +73,7 @@ func toJsonSafe(_ value: Any?) -> Any? {
 }
 
 private func messageToJson(_ message: EMChatMessage) -> [String: Any] {
-    let bodies = message.bodies.enumerated().map { index, body -> [String: Any] in
-        // 注意 iOS 的 body type 枚举从 1 开始（1 文本/2 图片/3 视频/4 位置/5 语音/6 文件），与 Flutter 从 0 开始不同。
-        var item: [String: Any] = ["index": index, "type": body.type.rawValue]
-        if let text = body as? EMTextMessageBody { item["text"] = text.text }
-        return item
-    }
+    let bodies = message.bodies.enumerated().map { bodyToJson($0.offset, $0.element) }
     return [
         "messageId": message.messageId,
         "conversationId": message.conversationId,
@@ -89,6 +84,71 @@ private func messageToJson(_ message: EMChatMessage) -> [String: Any] {
         "timestamp": message.timestamp,
         "bodies": bodies,
     ]
+}
+
+// 注意 iOS 的 body type 枚举从 1 开始（1 文本/2 图片/3 视频/4 位置/5 语音/6 文件/7 指令/8 自定义），与 Android 从 0 开始不同。
+// downloadStatus：0 下载中 / 1 成功 / 2 失败 / 3 等待中。可选值为 nil 时对应字段不出现在输出中。
+private func bodyToJson(_ index: Int, _ body: EMMessageBody) -> [String: Any] {
+    var item: [String: Any] = ["index": index, "type": body.type.rawValue, "typeName": bodyTypeName(body.type)]
+    switch body {
+    case let text as EMTextMessageBody:
+        item["text"] = text.text
+    case let location as EMLocationMessageBody:
+        item["latitude"] = location.latitude
+        item["longitude"] = location.longitude
+        item["address"] = location.address
+        item["buildingName"] = location.buildingName
+    case let cmd as EMCmdMessageBody:
+        item["action"] = cmd.action
+        item["deliverOnlineOnly"] = cmd.isDeliverOnlineOnly
+    case let custom as EMCustomMessageBody:
+        item["event"] = custom.event
+        item["params"] = custom.customExt
+    case let file as EMFileMessageBody:
+        item["fileName"] = file.displayName
+        item["localPath"] = file.localPath
+        item["remotePath"] = file.remotePath
+        item["fileSize"] = file.fileLength
+        item["downloadStatus"] = file.downloadStatus.rawValue
+        if let image = body as? EMImageMessageBody {
+            item["width"] = Int(image.size.width)
+            item["height"] = Int(image.size.height)
+            item["isOriginalImage"] = image.isOriginalImage
+            item["thumbnailLocalPath"] = image.thumbnailLocalPath
+            item["thumbnailRemotePath"] = image.thumbnailRemotePath
+            item["thumbnailFileSize"] = image.thumbnailFileLength
+            item["thumbnailDownloadStatus"] = image.thumbnailDownloadStatus.rawValue
+            item["bigImageLocalPath"] = image.bigImageLocalPath
+            item["bigImageRemotePath"] = image.bigImageRemotePath
+            item["bigImageDownloadStatus"] = image.bigImageDownloadStatus.rawValue
+        } else if let video = body as? EMVideoMessageBody {
+            item["duration"] = video.duration
+            item["thumbnailLocalPath"] = video.thumbnailLocalPath
+            item["thumbnailRemotePath"] = video.thumbnailRemotePath
+            item["thumbnailWidth"] = Int(video.thumbnailSize.width)
+            item["thumbnailHeight"] = Int(video.thumbnailSize.height)
+            item["thumbnailDownloadStatus"] = video.thumbnailDownloadStatus.rawValue
+        } else if let voice = body as? EMVoiceMessageBody {
+            item["duration"] = voice.duration
+        }
+    default:
+        break
+    }
+    return item
+}
+
+private func bodyTypeName(_ type: EMMessageBodyType) -> String {
+    switch type {
+    case .text: return "TXT"
+    case .image: return "IMAGE"
+    case .video: return "VIDEO"
+    case .location: return "LOCATION"
+    case .voice: return "VOICE"
+    case .file: return "FILE"
+    case .cmd: return "CMD"
+    case .custom: return "CUSTOM"
+    default: return "UNKNOWN"
+    }
 }
 
 private func conversationToJson(_ conversation: EMConversation) -> [String: Any] {
