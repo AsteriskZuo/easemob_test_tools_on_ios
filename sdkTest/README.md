@@ -12,6 +12,7 @@
 | 发送图片消息 | `SendImageMessageTest.swift` | 初始化、登录、发送图片消息、退出登录的独立链路测试 |
 | 用户 Token | `EasemobUserTokenView.swift` | 通过 Bearer Token 获取用户登录 Token |
 | 群组多设备事件 | `GroupMultiDeviceEventTest.swift` | 验证 HIM-23838 的群组多设备事件 30/31/32/33 |
+| API 调用 | `ApiTestViews.swift`、`ApiTestRegistry.swift` | 注册表驱动的指定 API 调用：搜索、编辑 JSON 参数、查看统一格式结果 |
 
 ## 登录与初始化、多 bodies 消息
 
@@ -202,6 +203,25 @@ func login() {
 7. 在设备 1 点击「销毁测试群」，确认成功后两台设备分别退出登录。
 
 不要在设备 2 开始观察之前运行设备 1 的操作。观察端会校验群 ID、事件顺序、35 秒超时，以及事件 30/31 中的用户 2；任一条件不满足都会显示 `FAIL`。
+
+## API 调用
+
+注册表驱动的通用 API 测试页（实现思路参考 Flutter example 的 registry 模式）：不为每个 API 写界面，而是在 `ApiTestRegistry.swift` 中手工注册 `ApiEntry`（名称、分组、说明、参数 JSON 模板、invoke 闭包），页面完全由注册表驱动。初始化与登录复用「登录与初始化」页面的共享状态，本页面只读显示，请先在该页面完成初始化和登录。
+
+1. 首页进入「API 调用」，列表展示全部已注册 API，可按名称或分组关键字过滤（大小写不敏感）。
+2. 点击某条 API 弹出调用页：查看参数说明、编辑 JSON 参数（预填必填字段模板）、点击「调用」。
+3. 结果为统一格式的格式化 JSON，可选择、复制；同时输出到 Xcode 控制台，前缀 `[APITester]`。成功为 `{"success": true, "data": ...}`，失败为 `{"success": false, "error": {"code": ..., "message": ...}}`，`error.code` 即 `EMError.code`。
+
+当前已注册 API（名称按 `分组.方法` 命名，说明中标注对应的 ObjC 接口）：
+
+| 注册名 | 对应接口 | 说明 |
+| --- | --- | --- |
+| `ChatManager.sendMessage` | `-[EMChatManager sendMessage:progress:completion:]` | 发送文本消息，chatType：0 单聊/1 群聊/2 聊天室 |
+| `ChatManager.getAllConversations` | `-[EMChatManager getAllConversations]` | 本地数据库全部会话 |
+| `ContactManager.getAllContacts` | `-[EMContactManager getAllContacts]` | 本地全部联系人（userId/remark/addTimestamp） |
+| `GroupManager.getJoinedGroups` | `-[EMGroupManager getJoinedGroups]` | 本地缓存的已加入群组 |
+
+新增 API 时在 `apiRegistry` 数组追加一条 `ApiEntry` 即可；返回值若是 SDK 模型，需在 `toJsonSafe` 中补充对应的 JSON 转换。注意 iOS 与 Flutter 的枚举值不一致（如消息 body 类型 iOS 从 1 开始、Flutter 从 0 开始），编写跨端脚本时以各端说明为准。
 
 ## 其他源文件
 

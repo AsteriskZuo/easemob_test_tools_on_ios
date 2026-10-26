@@ -28,6 +28,7 @@ enum NavigationDestination {
     case groupMultiDeviceEvent
     case multiBodiesMessage
     case sdkLogin
+    case apiTester
 }
 
 // MARK: - Main Navigation View
@@ -91,6 +92,13 @@ struct MainNavigationView: View {
             icon: "square.stack.3d.up.fill",
             color: .cyan,
             destination: .multiBodiesMessage
+        ),
+        NavigationItem(
+            title: "API 调用",
+            subtitle: "搜索已注册 API，编辑 JSON 参数并调用",
+            icon: "terminal.fill",
+            color: .brown,
+            destination: .apiTester
         ),
     ]
     
@@ -195,6 +203,12 @@ struct MainNavigationView: View {
             let testView = GroupMultiDeviceEventTest()
             let hostingController = UIHostingController(rootView: testView)
             hostingController.title = "群组多设备事件"
+            hostingController.edgesForExtendedLayout = []
+            viewController = hostingController
+
+        case .apiTester:
+            let hostingController = UIHostingController(rootView: ApiTestListView())
+            hostingController.title = "API 调用"
             hostingController.edgesForExtendedLayout = []
             viewController = hostingController
         }

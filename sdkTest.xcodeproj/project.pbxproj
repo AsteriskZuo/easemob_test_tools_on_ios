@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
         D9E510042FB28A3C00000011 /* SDKLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E510032FB28A3C00000011 /* SDKLoginView.swift */; };
         D9E510022FB28A3C00000010 /* MultiBodiesMessageTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E510012FB28A3C00000010 /* MultiBodiesMessageTest.swift */; };
+        D9E510062FB28A3C00000012 /* ApiTestRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E510052FB28A3C00000012 /* ApiTestRegistry.swift */; };
+        D9E510082FB28A3C00000013 /* ApiTestViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E510072FB28A3C00000013 /* ApiTestViews.swift */; };
 		C08D32702C74692A009C7674 /* IMG_8791.HEIC in Resources */ = {isa = PBXBuildFile; fileRef = C08D326F2C7467D6009C7674 /* IMG_8791.HEIC */; };
 		C0D706D42B2843C400C40D7A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D706D32B2843C400C40D7A /* AppDelegate.swift */; };
 		C0D706D62B2843C400C40D7A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D706D52B2843C400C40D7A /* SceneDelegate.swift */; };
@@ -50,6 +52,8 @@
 /* Begin PBXFileReference section */
         D9E510032FB28A3C00000011 /* SDKLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKLoginView.swift; sourceTree = "<group>"; };
         D9E510012FB28A3C00000010 /* MultiBodiesMessageTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiBodiesMessageTest.swift; sourceTree = "<group>"; };
+        D9E510052FB28A3C00000012 /* ApiTestRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiTestRegistry.swift; sourceTree = "<group>"; };
+        D9E510072FB28A3C00000013 /* ApiTestViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiTestViews.swift; sourceTree = "<group>"; };
 		C05989632BBAAEDD00480FED /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		C059FF522B3C12AF00FE8E42 /* sdkTest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = sdkTest.entitlements; sourceTree = "<group>"; };
 		C08D326F2C7467D6009C7674 /* IMG_8791.HEIC */ = {isa = PBXFileReference; lastKnownFileType = file; path = IMG_8791.HEIC; sourceTree = "<group>"; };
@@ -133,6 +137,8 @@
 				D9AA01012F31CC51007697B3 /* MainNavigationView.swift */,
 				D9E510012FB28A3C00000010 /* MultiBodiesMessageTest.swift */,
 				D9E510032FB28A3C00000011 /* SDKLoginView.swift */,
+				D9E510052FB28A3C00000012 /* ApiTestRegistry.swift */,
+				D9E510072FB28A3C00000013 /* ApiTestViews.swift */,
 				C0D706D52B2843C400C40D7A /* SceneDelegate.swift */,
 				C0D706D72B2843C400C40D7A /* ViewController.swift */,
 				D933C4922F9084C40011FAC3 /* MediaFilePickerTest.swift */,
@@ -257,6 +263,8 @@
 				D9AA01022F31CC51007697B3 /* MainNavigationView.swift in Sources */,
 				D9E510022FB28A3C00000010 /* MultiBodiesMessageTest.swift in Sources */,
 				D9E510042FB28A3C00000011 /* SDKLoginView.swift in Sources */,
+				D9E510062FB28A3C00000012 /* ApiTestRegistry.swift in Sources */,
+				D9E510082FB28A3C00000013 /* ApiTestViews.swift in Sources */,
 				D9E501022FB28A3C00000001 /* SendImageMessageTest.swift in Sources */,
 				D9E501042FB28A3C00000002 /* GroupMultiDeviceEventTest.swift in Sources */,
 				D9E501062FB28A3C00000003 /* EasemobUserTokenService.swift in Sources */,
