@@ -158,7 +158,7 @@ private func conversationToJson(_ conversation: EMConversation) -> [String: Any]
         "unreadMessagesCount": conversation.unreadMessagesCount,
         "messagesCount": conversation.messagesCount,
     ]
-    if let latest = conversation.latestMessage { json["latestMessageId"] = latest.messageId }
+    if let latest = conversation.latestMessage { json["latestMessage"] = messageToJson(latest) }
     return json
 }
 
@@ -241,7 +241,7 @@ let apiRegistry: [ApiEntry] = [
         group: "ChatManager",
         detail: """
         从本地数据库加载全部会话（同步方法，对应 getAllConversations）。
-        data 为会话数组，含 conversationId、type（0 单聊/1 群聊/2 聊天室）、unreadMessagesCount、messagesCount、latestMessageId。
+        data 为会话数组，含 conversationId、type（0 单聊/1 群聊/2 聊天室）、unreadMessagesCount、messagesCount、latestMessage（最后一条消息的完整 JSON）。
         """,
         paramsTemplate: "{}",
         invoke: { _ in
