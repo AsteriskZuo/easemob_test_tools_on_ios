@@ -118,7 +118,7 @@ struct ApiTestCallView: View {
                 result = ["success": false, "error": ["code": -1, "message": error.localizedDescription]]
             }
             let text = prettyJson(result)
-            NSLog("[APITester] api.%@ %@", entry.name, text)
+            consoleLogChunked("[APITester]", "api.\(entry.name) \(text)")
             running = false
             resultText = text
         }

@@ -181,7 +181,7 @@ private final class MultiBodiesMessageModel: NSObject, ObservableObject, @precon
     @Published var messageId = UserDefaults.standard.string(forKey: "multiBodies.lastMessageId") ?? ""
 
     func log(_ text: String) {
-        NSLog("[MultiBodies] %@", text)
+        consoleLogChunked("[MultiBodies]", text)
         let time = DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .medium)
         logs.append("\(time) \(text)")
         if logs.count > 500 { logs.removeFirst(logs.count - 500) }

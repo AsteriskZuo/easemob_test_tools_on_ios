@@ -224,8 +224,34 @@ final class SDKLoginState: NSObject, ObservableObject, @preconcurrency EMClientD
     }
 
     private func log(_ text: String) {
-        NSLog("[SDKDemo] %@", text)
+        consoleLogChunked("[SDKDemo]", text)
         logs.append("\(DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .medium)) \(text)")
         if logs.count > 100 { logs.removeFirst(logs.count - 100) }
+    }
+}
+
+/// NSLog 单条消息有长度上限（约 1KB），超长文本按 UTF-8 字节安全分片输出，分片带 [序号/总数] 前缀。
+func consoleLogChunked(_ tag: String, _ text: String) {
+    let maxBytes = 900
+    guard text.utf8.count > maxBytes else {
+        NSLog("%@ %@", tag, text)
+        return
+    }
+    var chunks: [String] = []
+    var chunk = ""
+    var chunkBytes = 0
+    for scalar in text.unicodeScalars {
+        let scalarBytes = String(scalar).utf8.count
+        if chunkBytes + scalarBytes > maxBytes {
+            chunks.append(chunk)
+            chunk = ""
+            chunkBytes = 0
+        }
+        chunk.unicodeScalars.append(scalar)
+        chunkBytes += scalarBytes
+    }
+    if !chunk.isEmpty { chunks.append(chunk) }
+    for (index, part) in chunks.enumerated() {
+        NSLog("%@ [%d/%d] %@", tag, index + 1, chunks.count, part)
     }
 }
