@@ -68,6 +68,7 @@ struct MultiBodiesMessageTest: View {
                     }
                 }
                 Toggle("单 body 使用原发送 API", isOn: $model.legacySingle)
+                Toggle("图片发送原图（关闭则压缩为大图发送，GIF 始终按原图）", isOn: $model.sendOriginal)
                 Text("仅一个 body 时可验证旧 API；多个 body 作为一条复合消息发送，顺序以上方列表为准。")
                     .font(.caption).foregroundStyle(.secondary)
                 HStack {
@@ -97,12 +98,8 @@ struct MultiBodiesMessageTest: View {
                         Text("缩略图").tag(1)
                         Text("大图").tag(2)
                     }
-                    Picker("下载范围", selection: $model.downloadIndex) {
-                        Text("整条消息").tag(-1)
-                        ForEach(message.bodies.indices, id: \.self) { index in
-                            Text("body[\(index)]").tag(index)
-                        }
-                    }
+                    Text("下载按整条消息进行：复合消息内所有适用 body 按顺序处理，完成后逐 body 核对上方状态与路径。")
+                        .font(.caption).foregroundStyle(.secondary)
                     Button("下载 / 重试所选附件") { model.download() }
                         .disabled(!session.loggedIn || session.busy || model.busy)
                 }
@@ -177,7 +174,7 @@ private final class MultiBodiesMessageModel: NSObject, ObservableObject, @precon
     @Published var legacySingle = true
     @Published var busy = false
     @Published var downloadResource = 0
-    @Published var downloadIndex = -1
+    @Published var sendOriginal = false
     @Published var messageId = UserDefaults.standard.string(forKey: "multiBodies.lastMessageId") ?? ""
 
     func log(_ text: String) {
@@ -271,7 +268,9 @@ private final class MultiBodiesMessageModel: NSObject, ObservableObject, @precon
                 if URL(fileURLWithPath: draft.value).pathExtension.lowercased() == "gif" {
                     return EMImageMessageBody(gifFilePath: draft.value, displayName: draft.name)
                 }
-                return EMImageMessageBody(localPath: draft.value, displayName: draft.name)
+                let image = EMImageMessageBody(localPath: draft.value, displayName: draft.name)
+                image.isOriginalImage = sendOriginal
+                return image
             case .file: return EMFileMessageBody(localPath: draft.value, displayName: draft.name)
             }
         }
@@ -286,7 +285,7 @@ private final class MultiBodiesMessageModel: NSObject, ObservableObject, @precon
         message.chatType = EMChatType(rawValue: chatType) ?? .chat
         busy = true
         select(message)
-        log("发送 \(legacy ? "旧 API 单 body" : "新 API")，bodyCount=\(bodies.count)\n\(describe(message))")
+        log("发送 \(legacy ? "旧 API 单 body" : "新 API")，bodyCount=\(bodies.count)，原图=\(sendOriginal)\n\(describe(message))")
         let completion: @Sendable (EMChatMessage?, EMError?) -> Void = { [weak self] result, error in
             DispatchQueue.main.async {
                 guard let self else { return }
@@ -296,21 +295,14 @@ private final class MultiBodiesMessageModel: NSObject, ObservableObject, @precon
                          ?? "发送成功 messageId=\((result ?? message).messageId)")
             }
         }
-        if legacy {
-            manager.send(message, progress: { [weak self] percent in
-                self?.log("上传 body[0] \(percent)%")
-            }, completion: completion)
-        } else {
-            manager.send(message, bodyProgress: { [weak self] percent, index in
-                self?.log("上传 body[\(index)] \(percent)%")
-            }, completion: completion)
-        }
+        manager.send(message, progress: { [weak self] percent in
+            self?.log("上传进度 \(percent)%")
+        }, completion: completion)
     }
 
     func select(_ message: EMChatMessage) {
         selected = message
         messageId = message.messageId
-        downloadIndex = -1
         UserDefaults.standard.set(messageId, forKey: "multiBodies.lastMessageId")
     }
 
@@ -343,14 +335,10 @@ private final class MultiBodiesMessageModel: NSObject, ObservableObject, @precon
     func download() {
         guard let message = selected, let manager = EMClient.shared().chatManager, !busy else { return }
         busy = true
-        let index = downloadIndex
         let resource = downloadResource
-        log("开始下载 \(message.messageId)，\(index < 0 ? "全部 bodies" : "body[\(index)]")，资源=\(resource)")
-        let progress: (Int32, Int32) -> Void = { [weak self] percent, bodyIndex in
-            self?.log("下载 body[\(bodyIndex)] \(percent)%")
-        }
-        let bodyCompletion: (EMChatMessage?, Int32, EMError?) -> Void = { [weak self] _, bodyIndex, error in
-            self?.log("下载 body[\(bodyIndex)]：\(error.map { "失败 \($0.code.rawValue) \($0.errorDescription ?? "")" } ?? "成功")")
+        log("开始下载 \(message.messageId)，资源=\(resource)")
+        let progress: (Int32) -> Void = { [weak self] percent in
+            self?.log("下载进度 \(percent)%")
         }
         let completion: @Sendable (EMChatMessage?, EMError?) -> Void = { [weak self] result, error in
             DispatchQueue.main.async {
@@ -360,19 +348,10 @@ private final class MultiBodiesMessageModel: NSObject, ObservableObject, @precon
                 self.log("下载请求结束：\(error.map { "失败 \($0.code.rawValue) \($0.errorDescription ?? "")" } ?? "成功")")
             }
         }
-        if index >= 0 {
-            let singleProgress: (Int32) -> Void = { progress($0, Int32(index)) }
-            switch resource {
-            case 1: manager.downloadMessageThumbnail(message, bodyIndex: UInt(index), progress: singleProgress, completion: completion)
-            case 2: manager.downloadBigImageAttachment(message, bodyIndex: UInt(index), progress: singleProgress, completion: completion)
-            default: manager.downloadMessageAttachment(message, bodyIndex: UInt(index), progress: singleProgress, completion: completion)
-            }
-        } else {
-            switch resource {
-            case 1: manager.downloadMessageThumbnail(message, bodyProgress: progress, bodyCompletion: bodyCompletion, completion: completion)
-            case 2: manager.downloadBigImageAttachment(message, bodyProgress: progress, bodyCompletion: bodyCompletion, completion: completion)
-            default: manager.downloadMessageAttachment(message, bodyProgress: progress, bodyCompletion: bodyCompletion, completion: completion)
-            }
+        switch resource {
+        case 1: manager.downloadMessageThumbnail(message, progress: progress, completion: completion)
+        case 2: manager.downloadBigImageAttachment(message, progress: progress, completion: completion)
+        default: manager.downloadMessageAttachment(message, progress: progress, completion: completion)
         }
     }
 
@@ -380,14 +359,25 @@ private final class MultiBodiesMessageModel: NSObject, ObservableObject, @precon
         message.bodies.enumerated().map { index, body in
             if let text = body as? EMTextMessageBody { return "[\(index)] TEXT \(text.text)" }
             if let file = body as? EMFileMessageBody {
-                var line = "[\(index)] type=\(body.type.rawValue) \(file.displayName ?? "") bytes=\(file.fileLength) status=\(file.downloadStatus.rawValue)\n\(file.localPath ?? "")"
+                var line = "[\(index)] type=\(body.type.rawValue) \(file.displayName ?? "") bytes=\(file.fileLength) status=\(file.downloadStatus.rawValue)\n原附件 \(fileStat(file.localPath))"
                 if let image = body as? EMImageMessageBody {
-                    line += "\nthumbnail=\(image.thumbnailDownloadStatus.rawValue) big=\(image.bigImageDownloadStatus.rawValue)"
+                    line += "\n缩略图 status=\(image.thumbnailDownloadStatus.rawValue) \(fileStat(image.thumbnailLocalPath))"
+                    line += "\n大图 status=\(image.bigImageDownloadStatus.rawValue) \(fileStat(image.bigImageLocalPath))"
+                } else if let video = body as? EMVideoMessageBody {
+                    line += "\n缩略图 status=\(video.thumbnailDownloadStatus.rawValue) \(fileStat(video.thumbnailLocalPath))"
                 }
                 return line
             }
             return "[\(index)] type=\(body.type.rawValue)"
         }.joined(separator: "\n")
+    }
+
+    private func fileStat(_ path: String?) -> String {
+        guard let path, !path.isEmpty else { return "path=（空）" }
+        guard FileManager.default.fileExists(atPath: path) else { return "path=\(path)（缺失）" }
+        let attributes = try? FileManager.default.attributesOfItem(atPath: path)
+        let bytes = (attributes?[.size] as? NSNumber)?.int64Value ?? -1
+        return "path=\(path)（\(bytes)B）"
     }
 
     func messagesDidReceive(_ aMessages: [EMChatMessage]) {
