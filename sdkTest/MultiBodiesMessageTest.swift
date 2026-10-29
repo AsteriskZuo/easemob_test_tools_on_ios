@@ -284,15 +284,16 @@ private final class MultiBodiesMessageModel: NSObject, ObservableObject, @precon
         guard let message else { log("消息构造失败，检查 bodies"); return }
         message.chatType = EMChatType(rawValue: chatType) ?? .chat
         busy = true
-        select(message)
+//        select(message) // 暂时注释掉
         log("发送 \(legacy ? "旧 API 单 body" : "新 API")，bodyCount=\(bodies.count)，原图=\(sendOriginal)\n\(describe(message))")
-        let completion: @Sendable (EMChatMessage?, EMError?) -> Void = { [weak self] result, error in
+        let completion: @Sendable (EMChatMessage?, EMError?) -> Void = { [weak self] newMessage, error in
             DispatchQueue.main.async {
                 guard let self else { return }
                 self.busy = false
-                self.remember(result ?? message)
+                self.remember(newMessage ?? message)
                 self.log(error.map { "发送失败 [\($0.code.rawValue)]：\($0.errorDescription ?? "")" }
-                         ?? "发送成功 messageId=\((result ?? message).messageId)")
+                         ?? "发送成功 messageId=\((newMessage ?? message).messageId)")
+                if let newMessage { self.select(newMessage) } // 使用新消息尝试
             }
         }
         manager.send(message, progress: { [weak self] percent in
