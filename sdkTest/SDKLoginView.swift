@@ -92,14 +92,14 @@ final class SDKLoginState: NSObject, ObservableObject, @preconcurrency EMClientD
     @Published private(set) var username = ""
     @Published private(set) var busy = false
     @Published var logs: [String] = []
-    @Published var consoleLog = SDKLoginOption.sdkDefault
+    @Published var consoleLog = SDKLoginOption.enabled
     @Published var httpsOnly = SDKLoginOption.sdkDefault
     @Published var transferAttachments = SDKLoginOption.sdkDefault
     @Published var autoDownload = SDKLoginOption.sdkDefault
     @Published var autoLoadConversations = SDKLoginOption.sdkDefault
-    @Published var syncConversations = SDKLoginOption.sdkDefault
-    @Published var syncGroups = SDKLoginOption.sdkDefault
-    @Published var syncContacts = SDKLoginOption.sdkDefault
+    @Published var syncConversations = SDKLoginOption.enabled
+    @Published var syncGroups = SDKLoginOption.enabled
+    @Published var syncContacts = SDKLoginOption.enabled
     private var listening = false
 
     private override init() { super.init() }
