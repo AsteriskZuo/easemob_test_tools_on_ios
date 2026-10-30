@@ -59,8 +59,8 @@ func toJsonSafe(_ value: Any?) -> Any? {
         return messageToJson(message)
     case let conversation as EMConversation:
         return conversationToJson(conversation)
-    case let group as EMGroup:
-        return groupToJson(group)
+    case let member as EMConversationMember:
+        return conversationMemberToJson(member)
     case let contact as EMContact:
         return contactToJson(contact)
     case let array as [Any]:
@@ -79,9 +79,10 @@ private func messageToJson(_ message: EMChatMessage) -> [String: Any] {
         "conversationId": message.conversationId,
         "from": message.from,
         "to": message.to,
-        "chatType": message.chatType.rawValue,
+        "direction": message.direction.rawValue,
         "status": message.status.rawValue,
         "timestamp": message.timestamp,
+        "seq": message.seq,
         "bodies": bodies,
     ]
 }
@@ -154,20 +155,35 @@ private func bodyTypeName(_ type: EMMessageBodyType) -> String {
 private func conversationToJson(_ conversation: EMConversation) -> [String: Any] {
     var json: [String: Any] = [
         "conversationId": conversation.conversationId,
-        "type": conversation.type.rawValue,
+        "isPinned": conversation.isPinned,
+        "pinnedTime": conversation.pinnedTime,
         "unreadMessagesCount": conversation.unreadMessagesCount,
-        "messagesCount": conversation.messagesCount,
+        "updatedAt": conversation.updatedAt,
+        "markValue": conversation.markValue,
+        "conversationName": conversation.conversationName,
+        "conversationAvatar": conversation.conversationAvatar,
+        "allBlocked": conversation.allBlocked,
+        "blocked": conversation.blocked,
+        "disabled": conversation.disabled,
+        "archived": conversation.archived,
+        "totalCount": conversation.totalCount,
+        "createAt": conversation.createAt,
+        "joinedTimestamp": conversation.joinedTimestamp,
+        "role": conversation.role,
+        "groupOwner": conversation.groupOwner,
+        "seq": conversation.seq,
+        "sessionRecordId": conversation.sessionRecordId,
     ]
     if let latest = conversation.latestMessage { json["latestMessage"] = messageToJson(latest) }
     return json
 }
 
-private func groupToJson(_ group: EMGroup) -> [String: Any] {
+private func conversationMemberToJson(_ member: EMConversationMember) -> [String: Any] {
     [
-        "groupId": group.groupId,
-        "groupName": group.groupName,
-        "owner": group.owner,
-        "description": group.description,
+        "memberId": member.memberId,
+        "username": member.username,
+        "role": member.role,
+        "joinedTimestamp": member.joinedTimestamp,
     ]
 }
 
@@ -201,28 +217,22 @@ let apiRegistry: [ApiEntry] = [
         group: "ChatManager",
         detail: """
         发送文本消息（对应 EMChatManager 的 sendMessage:progress:completion: 异步接口）。
-        chatType：0 单聊 / 1 群聊 / 2 聊天室；群聊与聊天室的 to 填已加入的群 ID / 聊天室 ID。
+        RTEPlus 消息模型不再暴露 ChatType，to 按会话 ID / 接收方 ID 填写。
         成功时 data 为发送完成后的消息 JSON，messageId 已是服务器下发的 ID。
         """,
         paramsTemplate: """
         {
           "to": "targetId",
-          "chatType": 0,
           "content": "hello"
         }
         """,
         invoke: { params in
             let to = try requiredString(params, "to")
             let content = try requiredString(params, "content")
-            let chatTypeRaw = params["chatType"] as? Int ?? 0
-            guard let chatType = EMChatType(rawValue: chatTypeRaw) else {
-                throw ApiInvokeError(code: -1, message: "chatType 只支持 0/1/2")
-            }
             let manager: IEMChatManager = try requireManager(EMClient.shared().chatManager)
             let message = EMChatMessage(conversationID: to,
                                         body: EMTextMessageBody(text: content),
                                         ext: nil)
-            message.chatType = chatType
             return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<EMChatMessage, Error>) in
                 manager.send(message, progress: nil) { sent, error in
                     if let error {
@@ -237,16 +247,31 @@ let apiRegistry: [ApiEntry] = [
         }
     ),
     ApiEntry(
-        name: "ChatManager.getAllConversations",
-        group: "ChatManager",
+        name: "ConversationManager.getConversationFromServer",
+        group: "ConversationManager",
         detail: """
-        从本地数据库加载全部会话（同步方法，对应 getAllConversations）。
-        data 为会话数组，含 conversationId、type（0 单聊/1 群聊/2 聊天室）、unreadMessagesCount、messagesCount、latestMessage（最后一条消息的完整 JSON）。
+        从服务端获取单个会话（对应 IEMConversationManager 的 getConversationFromServer:completion:）。
+        data 为会话快照，包含置顶、未读数、资料、成员数、seq 和 latestMessage 等字段。
         """,
-        paramsTemplate: "{}",
-        invoke: { _ in
-            let manager: IEMChatManager = try requireManager(EMClient.shared().chatManager)
-            return manager.getAllConversations() ?? []
+        paramsTemplate: """
+        {
+          "conversationId": "conversationId"
+        }
+        """,
+        invoke: { params in
+            let conversationId = try requiredString(params, "conversationId")
+            let manager: IEMConversationManager = try requireManager(EMClient.shared().conversationManager)
+            return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<EMConversation, Error>) in
+                manager.getConversationFromServer(conversationId) { conversation, error in
+                    if let error {
+                        continuation.resume(throwing: error.apiError)
+                    } else if let conversation {
+                        continuation.resume(returning: conversation)
+                    } else {
+                        continuation.resume(throwing: ApiInvokeError(code: -1, message: "getConversationFromServer 回调中 conversation 与 error 均为空"))
+                    }
+                }
+            }
         }
     ),
     ApiEntry(
@@ -263,70 +288,38 @@ let apiRegistry: [ApiEntry] = [
         }
     ),
     ApiEntry(
-        name: "GroupManager.getJoinedGroups",
-        group: "GroupManager",
+        name: "ConversationManager.getConversationMembersFromServer",
+        group: "ConversationManager",
         detail: """
-        获取本地缓存的当前用户已加入群组列表（同步方法，对应 getJoinedGroups）。
-        data 为群组数组，含 groupId、groupName、owner、description。
-        """,
-        paramsTemplate: "{}",
-        invoke: { _ in
-            let manager: IEMGroupManager = try requireManager(EMClient.shared().groupManager)
-            return manager.getJoinedGroups() ?? []
-        }
-    ),
-    ApiEntry(
-        name: "ChatManager.fetchMessagesFromServer",
-        group: "ChatManager",
-        detail: """
-        从服务器分页拉取指定会话的历史消息（对应 EMChatManager 的 fetchMessagesFromServerBy:conversationType:cursor:pageSize:option:completion:，其他端常叫 asyncFetchHistoryMessages）。
-        conversationType：0 单聊 / 1 群聊 / 2 聊天室；conversationId 单聊填对端用户 ID，群聊/聊天室填群 ID/聊天室 ID。cursor 传空字符串从最新开始；pageSize 取值 [1,50]。
-        option 可整体省略；fromIds 按发送方过滤（仅群聊）；msgTypes 为消息类型数组（1 文本/2 图片/3 视频/4 位置/5 语音/6 文件/7 指令/8 自定义）；startTime/endTime 为毫秒时间戳（-1 表示忽略）；direction：0 倒序 / 1 正序；isSave 控制拉取结果是否写入本地数据库（默认 false）。
-        返回 data 为 {"cursor": "...", "list": [消息 JSON...]}；返回条数小于 pageSize 说明服务器没有更多历史消息。
+        分页获取会话成员（对应 IEMConversationManager 的 getConversationMembersFromServer:limit:cursor:sort:completion:）。
+        limit 取值 [1,100]，传 0 使用服务端默认值；cursor 传空字符串表示首页；sort：0 升序 / 1 降序。
+        返回 data 为 {"cursor": "...", "list": [成员 JSON...]}；cursor 为空表示没有下一页。
         """,
         paramsTemplate: """
         {
-          "conversationId": "targetId",
-          "conversationType": 0,
+          "conversationId": "conversationId",
+          "limit": 20,
           "cursor": "",
-          "pageSize": 20,
-          "option": {
-            "direction": 0,
-            "isSave": false
-          }
+          "sort": 0
         }
         """,
         invoke: { params in
             let conversationId = try requiredString(params, "conversationId")
-            let typeRaw = params["conversationType"] as? Int ?? 0
-            guard let conversationType = EMConversationType(rawValue: typeRaw) else {
-                throw ApiInvokeError(code: -1, message: "conversationType 只支持 0/1/2")
+            let limit = params["limit"] as? Int ?? 20
+            guard limit >= 0, limit <= 100 else {
+                throw ApiInvokeError(code: -1, message: "limit 取值范围为 [0,100]")
             }
             let cursor = params["cursor"] as? String ?? ""
-            let pageSize = UInt(params["pageSize"] as? Int ?? 20)
-            var fetchOption: EMFetchServerMessagesOption?
-            if let optionParams = params["option"] as? [String: Any] {
-                let option = EMFetchServerMessagesOption()
-                if let fromIds = optionParams["fromIds"] as? [String] { option.fromIds = fromIds }
-                if let msgTypes = optionParams["msgTypes"] as? [Int] {
-                    option.msgTypes = msgTypes.map { NSNumber(value: $0) }
-                }
-                if let startTime = optionParams["startTime"] as? Int { option.startTime = startTime }
-                if let endTime = optionParams["endTime"] as? Int { option.endTime = endTime }
-                if let direction = optionParams["direction"] as? Int,
-                   let value = EMMessageSearchDirection(rawValue: direction) {
-                    option.direction = value
-                }
-                if let isSave = optionParams["isSave"] as? Bool { option.isSave = isSave }
-                fetchOption = option
+            let sortRaw = params["sort"] as? Int ?? 0
+            guard let sort = EMSortOrder(rawValue: sortRaw) else {
+                throw ApiInvokeError(code: -1, message: "sort 只支持 0/1")
             }
-            let manager: IEMChatManager = try requireManager(EMClient.shared().chatManager)
+            let manager: IEMConversationManager = try requireManager(EMClient.shared().conversationManager)
             return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<[String: Any], Error>) in
-                manager.fetchMessagesFromServer(by: conversationId,
-                                                conversationType: conversationType,
-                                                cursor: cursor,
-                                                pageSize: pageSize,
-                                                option: fetchOption) { result, error in
+                manager.getConversationMembers(fromServer: conversationId,
+                                               limit: limit,
+                                               cursor: cursor.isEmpty ? nil : cursor,
+                                               sort: sort) { result, error in
                     if let error {
                         continuation.resume(throwing: error.apiError)
                     } else if let result {
@@ -335,7 +328,48 @@ let apiRegistry: [ApiEntry] = [
                             "list": (result.list ?? []).map { toJsonSafe($0) ?? NSNull() },
                         ])
                     } else {
-                        continuation.resume(throwing: ApiInvokeError(code: -1, message: "fetchMessagesFromServer 回调中 result 与 error 均为空"))
+                        continuation.resume(throwing: ApiInvokeError(code: -1, message: "getConversationMembersFromServer 回调中 result 与 error 均为空"))
+                    }
+                }
+            }
+        }
+    ),
+    ApiEntry(
+        name: "ChatManager.loadMessagesFromConversation",
+        group: "ChatManager",
+        detail: """
+        按会话从新到旧分页加载消息（对应 IEMChatManager 的 loadMessagesFromConversation:cursor:pageSize:completion:）。
+        本地 seq 链有缺口时 SDK 会先从服务端漫游补齐。cursor 传空字符串从最新开始；pageSize 取值 [1,400]。
+        返回 data 为 {"cursor": "...", "list": [消息 JSON...]}；cursor 为空表示没有更多历史消息。
+        """,
+        paramsTemplate: """
+        {
+          "conversationId": "conversationId",
+          "cursor": "",
+          "pageSize": 20
+        }
+        """,
+        invoke: { params in
+            let conversationId = try requiredString(params, "conversationId")
+            let cursor = params["cursor"] as? String ?? ""
+            let pageSize = params["pageSize"] as? Int ?? 20
+            guard pageSize >= 1, pageSize <= 400 else {
+                throw ApiInvokeError(code: -1, message: "pageSize 取值范围为 [1,400]")
+            }
+            let manager: IEMChatManager = try requireManager(EMClient.shared().chatManager)
+            return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<[String: Any], Error>) in
+                manager.loadMessages(fromConversation: conversationId,
+                                     cursor: cursor.isEmpty ? nil : cursor,
+                                     pageSize: pageSize) { result, error in
+                    if let error {
+                        continuation.resume(throwing: error.apiError)
+                    } else if let result {
+                        continuation.resume(returning: [
+                            "cursor": result.cursor ?? "",
+                            "list": (result.list ?? []).map { toJsonSafe($0) ?? NSNull() },
+                        ])
+                    } else {
+                        continuation.resume(throwing: ApiInvokeError(code: -1, message: "loadMessagesFromConversation 回调中 result 与 error 均为空"))
                     }
                 }
             }

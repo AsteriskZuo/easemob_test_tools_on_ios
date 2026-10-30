@@ -14,8 +14,7 @@
 		C08D32702C74692A009C7674 /* IMG_8791.HEIC in Resources */ = {isa = PBXBuildFile; fileRef = C08D326F2C7467D6009C7674 /* IMG_8791.HEIC */; };
 		C0D706D42B2843C400C40D7A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D706D32B2843C400C40D7A /* AppDelegate.swift */; };
 		C0D706D62B2843C400C40D7A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D706D52B2843C400C40D7A /* SceneDelegate.swift */; };
-		C0D706D82B2843C400C40D7A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D706D72B2843C400C40D7A /* ViewController.swift */; };
-		C0D706DB2B2843C400C40D7A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0D706D92B2843C400C40D7A /* Main.storyboard */; };
+				C0D706DB2B2843C400C40D7A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0D706D92B2843C400C40D7A /* Main.storyboard */; };
 		C0D706DD2B2843C800C40D7A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0D706DC2B2843C800C40D7A /* Assets.xcassets */; };
 		C0D706E02B2843C800C40D7A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0D706DE2B2843C800C40D7A /* LaunchScreen.storyboard */; };
 		C0D706EF2B28507B00C40D7A /* TokenBuilder.mm in Sources */ = {isa = PBXBuildFile; fileRef = C0D706EE2B28507B00C40D7A /* TokenBuilder.mm */; };
@@ -25,12 +24,10 @@
 		C0E35E2E2D12D20D00AC90E2 /* HyphenateChat.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C0E35E2C2D12D20D00AC90E2 /* HyphenateChat.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D933C4912F907E650011FAC3 /* VPNChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D933C48F2F907CE30011FAC3 /* VPNChecker.swift */; };
 		D933C4932F9084C40011FAC3 /* MediaFilePickerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D933C4922F9084C40011FAC3 /* MediaFilePickerTest.swift */; };
-		D94BCB722DB11AFC00859299 /* test_remove_group_member.swift in Sources */ = {isa = PBXBuildFile; fileRef = D94BCB712DB11AFC00859299 /* test_remove_group_member.swift */; };
 		D97D29272E80F85000617DDD /* IOSPathResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = D97D29252E80F85000617DDD /* IOSPathResolver.m */; };
 		D9AA01022F31CC51007697B3 /* MainNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AA01012F31CC51007697B3 /* MainNavigationView.swift */; };
 		D9D2174E2F30AFFF005C9F84 /* LZ4CompressionTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D2174D2F30AFFF005C9F84 /* LZ4CompressionTestView.swift */; };
 		D9E501022FB28A3C00000001 /* SendImageMessageTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E501012FB28A3C00000001 /* SendImageMessageTest.swift */; };
-		D9E501042FB28A3C00000002 /* GroupMultiDeviceEventTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E501032FB28A3C00000002 /* GroupMultiDeviceEventTest.swift */; };
 		D9E501062FB28A3C00000003 /* EasemobUserTokenService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E501052FB28A3C00000003 /* EasemobUserTokenService.swift */; };
 		D9E501082FB28A3C00000004 /* EasemobUserTokenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E501072FB28A3C00000004 /* EasemobUserTokenView.swift */; };
 /* End PBXBuildFile section */
@@ -253,11 +250,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				D933C4932F9084C40011FAC3 /* MediaFilePickerTest.swift in Sources */,
-				C0D706D82B2843C400C40D7A /* ViewController.swift in Sources */,
 				C0D706EF2B28507B00C40D7A /* TokenBuilder.mm in Sources */,
 				D933C4912F907E650011FAC3 /* VPNChecker.swift in Sources */,
 				D97D29272E80F85000617DDD /* IOSPathResolver.m in Sources */,
-				D94BCB722DB11AFC00859299 /* test_remove_group_member.swift in Sources */,
 				C0D706D42B2843C400C40D7A /* AppDelegate.swift in Sources */,
 				D9D2174E2F30AFFF005C9F84 /* LZ4CompressionTestView.swift in Sources */,
 				D9AA01022F31CC51007697B3 /* MainNavigationView.swift in Sources */,
@@ -266,7 +261,6 @@
 				D9E510062FB28A3C00000012 /* ApiTestRegistry.swift in Sources */,
 				D9E510082FB28A3C00000013 /* ApiTestViews.swift in Sources */,
 				D9E501022FB28A3C00000001 /* SendImageMessageTest.swift in Sources */,
-				D9E501042FB28A3C00000002 /* GroupMultiDeviceEventTest.swift in Sources */,
 				D9E501062FB28A3C00000003 /* EasemobUserTokenService.swift in Sources */,
 				D9E501082FB28A3C00000004 /* EasemobUserTokenView.swift in Sources */,
 				C0D706D62B2843C400C40D7A /* SceneDelegate.swift in Sources */,
@@ -378,7 +372,6 @@
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = Yes;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -535,7 +528,6 @@
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = Yes;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -577,7 +569,6 @@
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = Yes;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;

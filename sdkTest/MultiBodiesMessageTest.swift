@@ -23,14 +23,9 @@ struct MultiBodiesMessageTest: View {
                 Button("打开登录与初始化页面") { showLogin = true }
             }
             Section("发送目标") {
-                TextField("用户 / 群组 / 聊天室 ID", text: $model.target)
+                TextField("会话 ID / 接收方 ID", text: $model.target)
                     .textInputAutocapitalization(.never).autocorrectionDisabled()
-                Picker("会话类型", selection: $model.chatType) {
-                    Text("单聊").tag(0)
-                    Text("群聊").tag(1)
-                    Text("聊天室").tag(2)
-                }
-                Text("群聊和聊天室请使用当前账号已加入的目标。")
+                Text("RTEPlus 消息模型不再区分 ChatType，目标按会话 ID 填写。")
                     .font(.caption).foregroundStyle(.secondary)
             }.disabled(model.busy)
             Section("自由添加消息体") {
@@ -170,7 +165,6 @@ private final class MultiBodiesMessageModel: NSObject, ObservableObject, @precon
     @Published var messages: [EMChatMessage] = []
     @Published var selected: EMChatMessage?
     @Published var target = ""
-    @Published var chatType = 0
     @Published var legacySingle = true
     @Published var busy = false
     @Published var downloadResource = 0
@@ -282,7 +276,6 @@ private final class MultiBodiesMessageModel: NSObject, ObservableObject, @precon
             message = EMChatMessage(conversationID: receiver, bodies: bodies, ext: nil)
         }
         guard let message else { log("消息构造失败，检查 bodies"); return }
-        message.chatType = EMChatType(rawValue: chatType) ?? .chat
         busy = true
 //        select(message) // 暂时注释掉
         log("发送 \(legacy ? "旧 API 单 body" : "新 API")，bodyCount=\(bodies.count)，原图=\(sendOriginal)\n\(describe(message))")
@@ -324,13 +317,13 @@ private final class MultiBodiesMessageModel: NSObject, ObservableObject, @precon
     }
 
     func save() {
-        guard let message = selected,
-              let conversation = EMClient.shared().chatManager?.getConversation(message.conversationId,
-                    type: EMConversationType(rawValue: message.chatType.rawValue) ?? .chat,
-                    createIfNotExist: true) else { return }
-        var error: EMError?
-        conversation.insert(message, error: &error)
-        log("保存 \(message.messageId)：\(error.map { "失败 \($0.errorDescription ?? "")" } ?? "成功")")
+        guard let message = selected, let manager = EMClient.shared().chatManager else { return }
+        let messageId = message.messageId
+        manager.import([message]) { [weak self] error in
+            DispatchQueue.main.async {
+                self?.log("保存 \(messageId)：\(error.map { "失败 \($0.errorDescription ?? "")" } ?? "成功")")
+            }
+        }
     }
 
     func download() {

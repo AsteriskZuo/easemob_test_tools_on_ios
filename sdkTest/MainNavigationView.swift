@@ -20,12 +20,10 @@ struct NavigationItem: Identifiable {
 }
 
 enum NavigationDestination {
-    case viewController
     case lz4CompressionTest
     case mediaFilePicker
     case sendImageMessage
     case userToken
-    case groupMultiDeviceEvent
     case multiBodiesMessage
     case sdkLogin
     case apiTester
@@ -43,13 +41,6 @@ struct MainNavigationView: View {
             icon: "person.crop.circle.badge.checkmark",
             color: .blue,
             destination: .sdkLogin
-        ),
-        NavigationItem(
-            title: "SDK 测试",
-            subtitle: "原始 ViewController - 登录、发消息等",
-            icon: "message.fill",
-            color: .blue,
-            destination: .viewController
         ),
         NavigationItem(
             title: "LZ4 压缩测试",
@@ -78,13 +69,6 @@ struct MainNavigationView: View {
             icon: "key.fill",
             color: .teal,
             destination: .userToken
-        ),
-        NavigationItem(
-            title: "群组多设备事件",
-            subtitle: "验证白名单与全员禁言事件 30/31/32/33",
-            icon: "rectangle.on.rectangle.angled",
-            color: .indigo,
-            destination: .groupMultiDeviceEvent
         ),
         NavigationItem(
             title: "多 bodies 消息",
@@ -162,15 +146,6 @@ struct MainNavigationView: View {
             hostingController.edgesForExtendedLayout = []
             viewController = hostingController
 
-        case .viewController:
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            if let vc = storyboard.instantiateInitialViewController() as? ViewController {
-                viewController = vc
-                viewController.title = "SDK 测试"
-            } else {
-                return
-            }
-            
         case .lz4CompressionTest:
             let lz4View = LZ4CompressionTestView()
             let hostingController = UIHostingController(rootView: lz4View)
@@ -196,13 +171,6 @@ struct MainNavigationView: View {
             let tokenView = EasemobUserTokenView()
             let hostingController = UIHostingController(rootView: tokenView)
             hostingController.title = "用户 Token"
-            hostingController.edgesForExtendedLayout = []
-            viewController = hostingController
-
-        case .groupMultiDeviceEvent:
-            let testView = GroupMultiDeviceEventTest()
-            let hostingController = UIHostingController(rootView: testView)
-            hostingController.title = "群组多设备事件"
             hostingController.edgesForExtendedLayout = []
             viewController = hostingController
 

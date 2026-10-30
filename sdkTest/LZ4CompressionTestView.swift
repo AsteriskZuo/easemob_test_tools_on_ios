@@ -664,7 +664,6 @@ class LZ4CompressionTestViewModel: ObservableObject {
     private func sendCmdMessage(action: String) {
         let cmdBody = EMCmdMessageBody(action: action)
         let msg = EMChatMessage(conversationID: targetUserId, body: cmdBody, ext: nil)
-        msg.chatType = .chat
         
         EMClient.shared().chatManager?.send(msg, progress: nil) { [weak self] message, error in
             DispatchQueue.main.async {

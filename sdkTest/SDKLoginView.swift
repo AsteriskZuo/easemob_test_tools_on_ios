@@ -22,13 +22,10 @@ struct SDKLoginView: View {
                     option("仅使用 HTTPS", selection: $session.httpsOnly)
                     option("自动传输消息附件", selection: $session.transferAttachments)
                     option("自动下载缩略图和语音", selection: $session.autoDownload)
-                    option("自动加载会话", selection: $session.autoLoadConversations)
-                    option("同步会话", selection: $session.syncConversations)
-                    option("同步群组", selection: $session.syncGroups)
                     option("同步联系人", selection: $session.syncContacts)
                 }
                 .disabled(session.initialized || session.busy)
-                Text("“默认”不会覆盖 SDK 参数。同步项对应 EMOptions.dataSyncType 位掩码，“默认”按 SDK 默认值取值（会话开、群组/联系人关）；任一同步项改动后才会整体覆盖。初始化配置在进程中只生效一次，修改已生效的初始化参数请重启 App。")
+                Text("“默认”不会覆盖 SDK 参数。会话列表登录成功后总会自动同步；同步联系人对齐 EMOptions.dataSyncType 位掩码。初始化配置在进程中只生效一次，修改已生效的初始化参数请重启 App。")
                     .font(.caption).foregroundStyle(.secondary)
             }
             Section("操作") {
@@ -96,9 +93,6 @@ final class SDKLoginState: NSObject, ObservableObject, @preconcurrency EMClientD
     @Published var httpsOnly = SDKLoginOption.sdkDefault
     @Published var transferAttachments = SDKLoginOption.sdkDefault
     @Published var autoDownload = SDKLoginOption.sdkDefault
-    @Published var autoLoadConversations = SDKLoginOption.sdkDefault
-    @Published var syncConversations = SDKLoginOption.enabled
-    @Published var syncGroups = SDKLoginOption.enabled
     @Published var syncContacts = SDKLoginOption.enabled
     private var listening = false
 
@@ -130,12 +124,8 @@ final class SDKLoginState: NSObject, ObservableObject, @preconcurrency EMClientD
         if let value = httpsOnly.value { options.usingHttpsOnly = value }
         if let value = transferAttachments.value { options.isAutoTransferMessageAttachments = value }
         if let value = autoDownload.value { options.autoDownloadThumbnail = value }
-        if let value = autoLoadConversations.value { options.autoLoadConversations = value }
-        if syncConversations != .sdkDefault || syncGroups != .sdkDefault || syncContacts != .sdkDefault {
-            // dataSyncType 是位掩码（SDK 默认只同步会话）；"默认"项按 SDK 默认值取值。
+        if syncContacts != .sdkDefault {
             var sync: EMDataSyncType = []
-            if syncConversations.value ?? true { sync.insert(.conversations) }
-            if syncGroups.value ?? false { sync.insert(.joinedGroups) }
             if syncContacts.value ?? false { sync.insert(.contacts) }
             options.dataSyncType = sync
         }
@@ -144,7 +134,7 @@ final class SDKLoginState: NSObject, ObservableObject, @preconcurrency EMClientD
             return
         }
         refresh()
-        log("初始化完成：\(appKey)，console=\(options.enableConsoleLog)，HTTPS=\(options.usingHttpsOnly)，transfer=\(options.isAutoTransferMessageAttachments)，autoDownload=\(options.autoDownloadThumbnail)，autoLoadConversations=\(options.autoLoadConversations)，sync=\(describeDataSyncType(options.dataSyncType))")
+        log("初始化完成：\(appKey)，console=\(options.enableConsoleLog)，HTTPS=\(options.usingHttpsOnly)，transfer=\(options.isAutoTransferMessageAttachments)，autoDownload=\(options.autoDownloadThumbnail)，sync=\(describeDataSyncType(options.dataSyncType))")
     }
 
     func login() {
@@ -200,7 +190,7 @@ final class SDKLoginState: NSObject, ObservableObject, @preconcurrency EMClientD
     }
 
     private func logMessage(_ message: EMChatMessage, event: String) {
-        log("\(event) messageId=\(message.messageId) from=\(message.from) to=\(message.to) conversationId=\(message.conversationId) chatType=\(message.chatType.rawValue) bodyCount=\(message.bodies.count)")
+        log("\(event) messageId=\(message.messageId) from=\(message.from) to=\(message.to) conversationId=\(message.conversationId) direction=\(message.direction.rawValue) bodyCount=\(message.bodies.count)")
         for (index, body) in message.bodies.enumerated() {
             var detail = "messageId=\(message.messageId) body[\(index)] type=\(body.type.rawValue)"
             if let text = body as? EMTextMessageBody {
@@ -218,7 +208,6 @@ final class SDKLoginState: NSObject, ObservableObject, @preconcurrency EMClientD
     private func describeDataSyncType(_ type: EMDataSyncType) -> String {
         var parts: [String] = []
         if type.contains(.conversations) { parts.append("会话") }
-        if type.contains(.joinedGroups) { parts.append("群组") }
         if type.contains(.contacts) { parts.append("联系人") }
         return parts.isEmpty ? "无" : parts.joined(separator: "+")
     }
