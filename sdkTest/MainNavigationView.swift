@@ -20,6 +20,7 @@ struct NavigationItem: Identifiable {
 }
 
 enum NavigationDestination {
+    case envLoginTest
     case lz4CompressionTest
     case mediaFilePicker
     case sendImageMessage
@@ -35,6 +36,13 @@ struct MainNavigationView: View {
     @State private var selectedDestination: NavigationDestination?
     
     private let navigationItems: [NavigationItem] = [
+        NavigationItem(
+            title: "环境与密码登录",
+            subtitle: "独立环境配置 + 反射密码登录（迁移自旧 sdkTest 页面）",
+            icon: "network.badge.shield.half.filled",
+            color: .indigo,
+            destination: .envLoginTest
+        ),
         NavigationItem(
             title: "登录与初始化",
             subtitle: "可选初始化参数与共享登录状态",
@@ -134,6 +142,12 @@ struct MainNavigationView: View {
         let viewController: UIViewController
         
         switch destination {
+        case .envLoginTest:
+            let envLoginViewController = EnvLoginTestViewController()
+            envLoginViewController.title = "环境与密码登录"
+            envLoginViewController.edgesForExtendedLayout = []
+            viewController = envLoginViewController
+
         case .sdkLogin:
             let hostingController = UIHostingController(rootView: SDKLoginView())
             hostingController.title = "登录与初始化"
