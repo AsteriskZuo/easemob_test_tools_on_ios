@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreFoundation
 @preconcurrency import HyphenateChat
 
 /// 单个可调用 API 的注册项。
@@ -241,6 +242,7 @@ let apiRegistry: [ApiEntry] = [
         group: "ChatManager",
         detail: """
         从本地数据库加载全部会话（同步方法，对应 getAllConversations）。
+        无需参数，不创建会话；删除联系人并删除会话后，检查 data 中是否仍包含目标 conversationId。没有会话时返回 []。
         data 为会话数组，含 conversationId、type（0 单聊/1 群聊/2 聊天室）、unreadMessagesCount、messagesCount、latestMessage（最后一条消息的完整 JSON）。
         """,
         paramsTemplate: "{}",
@@ -260,6 +262,73 @@ let apiRegistry: [ApiEntry] = [
         invoke: { _ in
             let manager: IEMContactManager = try requireManager(EMClient.shared().contactManager)
             return manager.getAllContacts() ?? []
+        }
+    ),
+    ApiEntry(
+        name: "ContactManager.addContact",
+        group: "ContactManager",
+        detail: """
+        发送添加联系人请求（对应 addContact:message:completion: 异步接口，请先登录）。
+        username 为目标用户 ID；message 为邀请信息，可省略、传 null 或空字符串。
+        成功表示请求发送成功；需对方同意或自动接受，并通过 getAllContacts 确认好友关系已建立后，再测试删除。
+        """,
+        paramsTemplate: """
+        {
+          "username": "targetId",
+          "message": ""
+        }
+        """,
+        invoke: { params in
+            let username = try requiredString(params, "username")
+            if let message = params["message"], !(message is NSNull), !(message is String) {
+                throw ApiInvokeError(code: -1, message: "message 必须是字符串或 null")
+            }
+            let message = params["message"] as? String ?? ""
+            let manager: IEMContactManager = try requireManager(EMClient.shared().contactManager)
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                manager.addContact(username, message: message) { _, error in
+                    if let error {
+                        continuation.resume(throwing: error.apiError)
+                    } else {
+                        continuation.resume(returning: ())
+                    }
+                }
+            }
+            return nil
+        }
+    ),
+    ApiEntry(
+        name: "ContactManager.deleteContact",
+        group: "ContactManager",
+        detail: """
+        删除联系人（对应 deleteContact:isDeleteConversation:completion: 异步接口，请先登录）。
+        username 为要删除的联系人用户 ID；isDeleteConversation 必填：true 删除相关会话和消息，false 保留。
+        iOS 的 isDeleteConversation=true 对应 Android 的 keepConversation=false。
+        成功返回 {"success": true}；失败返回 SDK 错误码及错误信息。删除前后可调用 ChatManager.getAllConversations 对比。
+        """,
+        paramsTemplate: """
+        {
+          "username": "targetId",
+          "isDeleteConversation": true
+        }
+        """,
+        invoke: { params in
+            let username = try requiredString(params, "username")
+            guard let flag = params["isDeleteConversation"] as? NSNumber,
+                  CFGetTypeID(flag) == CFBooleanGetTypeID() else {
+                throw ApiInvokeError(code: -1, message: "isDeleteConversation 必须是布尔值 true/false")
+            }
+            let manager: IEMContactManager = try requireManager(EMClient.shared().contactManager)
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                manager.deleteContact(username, isDeleteConversation: flag.boolValue) { _, error in
+                    if let error {
+                        continuation.resume(throwing: error.apiError)
+                    } else {
+                        continuation.resume(returning: ())
+                    }
+                }
+            }
+            return nil
         }
     ),
     ApiEntry(

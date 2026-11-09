@@ -217,10 +217,21 @@ func login() {
 | 注册名 | 对应接口 | 说明 |
 | --- | --- | --- |
 | `ChatManager.sendMessage` | `-[EMChatManager sendMessage:progress:completion:]` | 发送文本消息，chatType：0 单聊/1 群聊/2 聊天室 |
-| `ChatManager.getAllConversations` | `-[EMChatManager getAllConversations]` | 本地数据库全部会话 |
+| `ChatManager.getAllConversations` | `-[EMChatManager getAllConversations]` | 本地全部会话，不创建会话，参数 `{}` |
+| `ContactManager.addContact` | `-[IEMContactManager addContact:message:completion:]` | 发送好友邀请，username 必填，message 可选 |
+| `ContactManager.deleteContact` | `-[IEMContactManager deleteContact:isDeleteConversation:completion:]` | 删除联系人，可指定删除或保留相关会话和消息 |
 | `ContactManager.getAllContacts` | `-[EMContactManager getAllContacts]` | 本地全部联系人（userId/remark/addTimestamp） |
 | `GroupManager.getJoinedGroups` | `-[EMGroupManager getJoinedGroups]` | 本地缓存的已加入群组 |
 | `ChatManager.fetchMessagesFromServer` | `-[EMChatManager fetchMessagesFromServerBy:conversationType:cursor:pageSize:option:completion:]` | 分页拉取服务器历史消息（其他端常叫 asyncFetchHistoryMessages），返回 `{"cursor", "list"}` |
+
+手动复验删除联系人：登录后先调用 `ChatManager.getAllConversations`（参数 `{}`）确认目标会话存在。再调用 `ContactManager.deleteContact`，参数为 `{"username":"目标联系人ID","isDeleteConversation":true}`。`true` 表示删除会话和消息，对应 Android 的 `keepConversation=false`；`false` 表示保留，该布尔参数必填。删除成功后再次获取会话列表，预期 `data` 中没有目标 `conversationId`；没有其他会话时为 `[]`。查询不会创建会话。结果可复制，并输出到 Xcode 控制台的 `[APITester]` 日志。
+
+手动复验联系人列表：
+
+1. 调用 `ContactManager.addContact`，参数 `{"username":"zuoyu02","message":""}`。`message` 可省略、传 `null` 或空字符串；成功表示邀请请求成功，需要对方同意或自动接受。
+2. 调用 `ContactManager.getAllContacts`（`{}`），先确认 `data` 中存在 `userId=zuoyu02`，再调用 `deleteContact`。
+3. 删除成功后立即查询一次本地联系人列表并保留结果；服务端 `ROSTER REMOVE` 通知处理后会触发 `friendshipDidRemoveByUser`，此后再次查询预期不再包含 `zuoyu02`。通知可能晚于删除 API 成功返回；若暂未收到通知，稍后重查并保留完整 SDK 日志。
+4. `isDeleteConversation` 只控制会话和消息是否保留，不影响联系人应被删除的预期。
 
 新增 API 时在 `apiRegistry` 数组追加一条 `ApiEntry` 即可；返回值若是 SDK 模型，需在 `toJsonSafe` 中补充对应的 JSON 转换。注意 iOS 与 Flutter 的枚举值不一致（如消息 body 类型 iOS 从 1 开始、Flutter 从 0 开始），编写跨端脚本时以各端说明为准。
 
